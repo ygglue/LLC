@@ -34,7 +34,7 @@ const leaves: [number, number, number, number][] = [
 ---
 
 <svg
-  class:list={['ornament pointer-events-none absolute -z-10 select-none text-champagne', tone === 'dark' ? 'ornament-dark' : 'ornament-light', fade === 'left' && 'ornament-fade-left', fade === 'top' && 'ornament-fade-top', fade === 'corners' && 'ornament-fade-corners', fade === 'right' && 'ornament-fade-right', variant === 'leaf' && 'ornament-fill', cls]}
+  class:list={['ornament pointer-events-none absolute -z-10 select-none text-champagne', tone === 'dark' ? 'ornament-dark' : 'ornament-light', fade === 'left' && 'ornament-fade-left', fade === 'top' && 'ornament-fade-top', fade === 'corners' && 'ornament-fade-corners', fade === 'right' && 'ornament-fade-right', cls]}
   aria-hidden="true"
   focusable="false"
   fill="none"
@@ -50,9 +50,10 @@ const leaves: [number, number, number, number][] = [
   {variant === 'leaf' && (
     <>
       <defs>
-        <!-- Native 80×40 tiling; the corner mask does the fading. -->
+        <!-- Native 80×40 tiling; the corner mask does the fading. Drawn as a
+             hairline outline (not filled) to match the other line ornaments. -->
         <pattern id={patternId} width="80" height="40" patternUnits="userSpaceOnUse">
-          <path d={LEAF_PATH} fill="currentColor" stroke="none" />
+          <path d={LEAF_PATH} fill="none" stroke="currentColor" stroke-width="0.6" stroke-linejoin="round" />
         </pattern>
       </defs>
       <rect width="100%" height="100%" fill={`url(#${patternId})`} stroke="none" />
@@ -134,10 +135,6 @@ const leaves: [number, number, number, number][] = [
   .ornament-fade-left {
     -webkit-mask-image: linear-gradient(to bottom, transparent 0%, transparent 68%, #000 88%);
     mask-image: linear-gradient(to bottom, transparent 0%, transparent 68%, #000 88%);
-  }
-  /* Filled motifs read heavier than 1px strokes, so they sit lower. */
-  .ornament-light.ornament-fill {
-    opacity: 0.26;
   }
   /* Only the two bottom corners, fading out toward the centre and top.
      Fixed-size corners so tall stacked layouts don't pull leaves up into copy. */
