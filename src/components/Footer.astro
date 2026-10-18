@@ -25,21 +25,13 @@ const hasInstagram = INSTAGRAM && INSTAGRAM !== '#';
 
 <footer class="bg-ink text-on-dark" data-dark>
   <div class="container-lux">
-    <!-- Closing line -->
-    <div class="flex flex-col gap-10 py-24 md:flex-row md:items-end md:justify-between md:py-32" data-reveal>
-      <p class="t-h2 max-w-2xl text-on-dark md:text-[3.5rem]">
-        Spaces, <em class="t-italic font-normal">quietly</em> perfected.
-      </p>
-      <a href={link('/quote/')} class="btn btn-on-dark shrink-0 self-start md:self-auto">Get a Free Quote</a>
-    </div>
-
-    <hr class="hairline" />
-
     <!-- Directory -->
-    <div class="grid gap-12 py-16 sm:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr_1.2fr] lg:gap-16 lg:py-20">
+    <div class="grid gap-12 pb-16 pt-20 sm:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr_1.2fr] lg:gap-16 lg:pb-20 lg:pt-24">
       <div>
         <Logo tone="ivory" />
-        <p class="mt-6 max-w-xs text-[0.9375rem] leading-relaxed text-on-dark-muted">
+        <!-- Sign-off only: the page's closing CtaBand carries the quote CTA. -->
+        <p class="t-italic mt-8 text-[1.625rem] leading-snug text-on-dark">Spaces, quietly perfected.</p>
+        <p class="mt-4 max-w-xs text-[0.9375rem] leading-relaxed text-on-dark-muted">
           Precision cleaning for contractors, commercial properties, and homeowners across the Orlando area.
         </p>
       </div>

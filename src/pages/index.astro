@@ -14,8 +14,11 @@ import CtaBand from '../components/CtaBand.astro';
 import { link, PHONE_HREF } from '../lib/site';
 
 import { Picture } from 'astro:assets';
-import whyUs from '../assets/images/why-us.jpg';
-import { widthSet, PICTURE_FORMATS } from '../lib/images';
+import whyUs from '../assets/images/services/movein.jpg';
+import { cropSet, PICTURE_FORMATS } from '../lib/images';
+
+// Portrait crop so the image balances the tall copy column beside it.
+const whyCrop = cropSet(whyUs, 4 / 5, [400, 640, 900]);
 
 
 const cities = [
@@ -70,10 +73,13 @@ const cities = [
       <figure class="frame mx-auto w-full max-w-[520px] lg:col-span-5 lg:mx-0 lg:mt-3" data-reveal>
         <Picture
           src={whyUs}
-          alt="Two-person Luxury Duo Cleaning crew wiping down a table in Orlando FL"
+          alt="Hands pulling on blue nitrile gloves against a pale wall — a Luxury Duo cleaner getting ready in Orlando FL"
           formats={[...PICTURE_FORMATS]}
           fallbackFormat="jpg"
-          widths={widthSet(whyUs, [400])}
+          width={whyCrop.width}
+          height={whyCrop.height}
+          widths={whyCrop.widths}
+          fit="cover"
           sizes="(min-width: 1320px) 460px, (min-width: 1024px) 36vw, (min-width: 568px) 520px, calc(100vw - 48px)"
           loading="lazy"
           decoding="async"
