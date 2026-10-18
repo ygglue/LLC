@@ -12,9 +12,11 @@ interface Props {
   class?: string;
   /** Surface the ornament sits on; dark surfaces need a lower opacity. */
   tone?: 'light' | 'dark';
+  /** Fade the strokes out toward one side so they stay clear of text there. */
+  fade?: 'left' | 'none';
 }
 
-const { variant, class: cls = '', tone = 'light' } = Astro.props;
+const { variant, class: cls = '', tone = 'light', fade = 'none' } = Astro.props;
 
 const range = (n: number, f: (i: number) => number) => Array.from({ length: n }, (_, i) => f(i));
 // Fan rays fanning across a half circle, centred at the bottom middle.
@@ -28,7 +30,7 @@ const leaves: [number, number, number, number][] = [
 ---
 
 <svg
-  class:list={['ornament pointer-events-none absolute -z-10 select-none text-champagne', tone === 'dark' ? 'ornament-dark' : 'ornament-light', cls]}
+  class:list={['ornament pointer-events-none absolute -z-10 select-none text-champagne', tone === 'dark' ? 'ornament-dark' : 'ornament-light', fade === 'left' && 'ornament-fade-left', cls]}
   aria-hidden="true"
   focusable="false"
   fill="none"
@@ -110,5 +112,18 @@ const leaves: [number, number, number, number][] = [
   }
   .ornament-dark {
     opacity: 0.16;
+  }
+  /* Clear on the left (where copy and list rules sit), full strength on the right.
+     Below lg the copy stacks full-width above the map, so fade top → bottom
+     instead and let the lines show only around the map. */
+  .ornament-fade-left {
+    -webkit-mask-image: linear-gradient(to bottom, transparent 0%, transparent 68%, #000 88%);
+    mask-image: linear-gradient(to bottom, transparent 0%, transparent 68%, #000 88%);
+  }
+  @media (min-width: 1024px) {
+    .ornament-fade-left {
+      -webkit-mask-image: linear-gradient(to right, transparent 0%, transparent 38%, #000 72%);
+      mask-image: linear-gradient(to right, transparent 0%, transparent 38%, #000 72%);
+    }
   }
 </style>
