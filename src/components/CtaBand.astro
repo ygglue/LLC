@@ -28,7 +28,7 @@ const {
 const dark = tone === 'dark';
 ---
 
-<section class={dark ? 'bg-ink' : 'bg-stone'} data-dark={dark ? '' : undefined}>
+<section class={dark ? 'bg-ink' : 'border-t border-line bg-stone'} data-dark={dark ? '' : undefined}>
   <div class="container-lux py-24 text-center md:py-32 lg:py-40" data-reveal>
     <span class="rule-champagne mx-auto mb-8" aria-hidden="true"></span>
     <p class:list={['t-eyebrow', !dark && 'text-gold-deep']}>Begin</p>

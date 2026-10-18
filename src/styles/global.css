@@ -23,19 +23,6 @@
   --color-on-dark-muted: #ada597;
   --color-error: #9a2b23;
 
-  /* Legacy aliases — keep until Phase 3 cleanup */
-  --color-primary: #1e1b18; /* → ink */
-  --color-primary-light: #3a342d; /* → ink-soft */
-  --color-accent: #1e1b18; /* → ink */
-  --color-accent-hover: #3a342d; /* → ink-soft */
-  --color-footer: #1e1b18; /* → ink */
-  --color-bg: #f7f3ec; /* → ivory */
-  --color-hero: #f7f3ec; /* → ivory */
-  --color-bg-alt: #ede6da; /* → stone */
-  --color-silver-light: #ede6da; /* → stone */
-  --color-silver: #b89a63; /* → champagne */
-  --color-star: #b89a63; /* → champagne */
-
   /* Type */
   --font-serif: "Cormorant Garamond", Georgia, serif;
   --font-sans: "Inter Variable", system-ui, sans-serif;
@@ -445,13 +432,13 @@
 /* ==========================================================================
    Focus visibility
    Light surfaces: ink outline (15.5:1 on ivory). Dark surfaces ([data-dark],
-   legacy bg-footer/bg-primary): champagne outline (6.40:1 on ink).
+   .bg-ink): champagne outline (6.40:1 on ink).
    ========================================================================== */
 :focus-visible {
   outline: 2px solid var(--color-ink);
   outline-offset: 3px;
 }
-:where(.bg-footer, .bg-primary, .bg-ink, [data-dark]) :focus-visible {
+:where(.bg-ink, [data-dark]) :focus-visible {
   outline-color: var(--color-champagne);
 }
 

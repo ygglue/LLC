@@ -16,8 +16,8 @@ const split = title.indexOf('. ');
 const lead = split > -1 ? title.slice(0, split + 1) : title;
 const emphasis = split > -1 ? title.slice(split + 2) : '';
 
-const IMAGE = 'images/services/airbnb.jpg';
-const IMAGE_ALT = 'Fresh folded towels and soap amenities set out for guests — Airbnb turnover cleaning in Orlando FL';
+const IMAGE = 'images/services/deep.jpg';
+const IMAGE_ALT = 'Hand holding a minimal aluminium spray bottle against a pale speckled wall — detail cleaning in Orlando FL';
 const meta = resolveImage(IMAGE);
 const crop = meta ? cropSet(meta, 4 / 5, [480, 640, 800, 1000]) : undefined;
 const base = import.meta.env.BASE_URL;
