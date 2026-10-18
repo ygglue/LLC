@@ -7,16 +7,20 @@
  * e.g. <Ornament variant="arcs" class="-right-40 -top-40 w-[36rem]" />.
  */
 interface Props {
-  variant: 'arcs' | 'fan' | 'contour' | 'monogram' | 'sprig' | 'grid';
+  variant: 'arcs' | 'fan' | 'contour' | 'monogram' | 'sprig' | 'grid' | 'leaf';
   /** Positioning / sizing utilities (absolute is applied for you). */
   class?: string;
   /** Surface the ornament sits on; dark surfaces need a lower opacity. */
   tone?: 'light' | 'dark';
   /** Fade the strokes out toward one side so they stay clear of text there. */
-  fade?: 'left' | 'top' | 'none';
+  fade?: 'left' | 'top' | 'corners' | 'none';
 }
 
 const { variant, class: cls = '', tone = 'light', fade = 'none' } = Astro.props;
+
+// Leaf tile (80×40), user-supplied asset (likely Hero Patterns "Leaf", CC BY 4.0).
+const LEAF_PATH = 'M0 40a19.96 19.96 0 0 1 5.9-14.11 20.17 20.17 0 0 1 19.44-5.2A20 20 0 0 1 20.2 40H0zM65.32.75A20.02 20.02 0 0 1 40.8 25.26 20.02 20.02 0 0 1 65.32.76zM.07 0h20.1l-.08.07A20.02 20.02 0 0 1 .75 5.25 20.08 20.08 0 0 1 .07 0zm1.94 40h2.53l4.26-4.24v-9.78A17.96 17.96 0 0 0 2 40zm5.38 0h9.8a17.98 17.98 0 0 0 6.67-16.42L7.4 40zm3.43-15.42v9.17l11.62-11.59c-3.97-.5-8.08.3-11.62 2.42zm32.86-.78A18 18 0 0 0 63.85 3.63L43.68 23.8zm7.2-19.17v9.15L62.43 2.22c-3.96-.5-8.05.3-11.57 2.4zm-3.49 2.72c-4.1 4.1-5.81 9.69-5.13 15.03l6.61-6.6V6.02c-.51.41-1 .85-1.48 1.33zM17.18 0H7.42L3.64 3.78A18 18 0 0 0 17.18 0zM2.08 0c-.01.8.04 1.58.14 2.37L4.59 0H2.07z';
+const patternId = `leaf-${Math.random().toString(36).slice(2, 8)}`;
 
 const range = (n: number, f: (i: number) => number) => Array.from({ length: n }, (_, i) => f(i));
 // Fan rays fanning across a half circle, centred at the bottom middle.
@@ -30,7 +34,7 @@ const leaves: [number, number, number, number][] = [
 ---
 
 <svg
-  class:list={['ornament pointer-events-none absolute -z-10 select-none text-champagne', tone === 'dark' ? 'ornament-dark' : 'ornament-light', fade === 'left' && 'ornament-fade-left', fade === 'top' && 'ornament-fade-top', cls]}
+  class:list={['ornament pointer-events-none absolute -z-10 select-none text-champagne', tone === 'dark' ? 'ornament-dark' : 'ornament-light', fade === 'left' && 'ornament-fade-left', fade === 'top' && 'ornament-fade-top', fade === 'corners' && 'ornament-fade-corners', variant === 'leaf' && 'ornament-fill', cls]}
   aria-hidden="true"
   focusable="false"
   fill="none"
@@ -43,6 +47,17 @@ const leaves: [number, number, number, number][] = [
   {...(variant === 'sprig' && { viewBox: '0 0 320 420' })}
   {...(variant === 'grid' && { viewBox: '0 0 400 400' })}
 >
+  {variant === 'leaf' && (
+    <>
+      <defs>
+        <!-- Native 80×40 tiling; the corner mask does the fading. -->
+        <pattern id={patternId} width="80" height="40" patternUnits="userSpaceOnUse">
+          <path d={LEAF_PATH} fill="currentColor" stroke="none" />
+        </pattern>
+      </defs>
+      <rect width="100%" height="100%" fill={`url(#${patternId})`} stroke="none" />
+    </>
+  )}
   {variant === 'arcs' && range(10, (i) => 60 + i * 56).map((r) => <circle cx="600" cy="0" r={r} vector-effect="non-scaling-stroke" />)}
 
   {variant === 'fan' && (
@@ -119,6 +134,26 @@ const leaves: [number, number, number, number][] = [
   .ornament-fade-left {
     -webkit-mask-image: linear-gradient(to bottom, transparent 0%, transparent 68%, #000 88%);
     mask-image: linear-gradient(to bottom, transparent 0%, transparent 68%, #000 88%);
+  }
+  /* Filled motifs read heavier than 1px strokes, so they sit lower. */
+  .ornament-light.ornament-fill {
+    opacity: 0.26;
+  }
+  /* Only the two bottom corners, fading out toward the centre and top.
+     Fixed-size corners so tall stacked layouts don't pull leaves up into copy. */
+  .ornament-fade-corners {
+    --corner: 11rem 8rem;
+    -webkit-mask-image:
+      radial-gradient(ellipse var(--corner) at 0% 100%, #000 0%, transparent 100%),
+      radial-gradient(ellipse var(--corner) at 100% 100%, #000 0%, transparent 100%);
+    mask-image:
+      radial-gradient(ellipse var(--corner) at 0% 100%, #000 0%, transparent 100%),
+      radial-gradient(ellipse var(--corner) at 100% 100%, #000 0%, transparent 100%);
+  }
+  @media (min-width: 1024px) {
+    .ornament-fade-corners {
+      --corner: 24rem 17rem;
+    }
   }
   /* Keep only the lower band of the shape (below centred copy and buttons). */
   .ornament-fade-top {
