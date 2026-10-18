@@ -7,8 +7,10 @@ interface Props {
 const { value, label } = Astro.props;
 ---
 
-<div class="text-center" data-reveal>
-  <div class="text-4xl font-bold tracking-tight text-primary sm:text-5xl" data-stat={value}>{value}</div>
+<!-- Container-sized value: stays on one line ("Same-day" never breaks at the
+     hyphen) and shrinks to fit narrow columns, capped at 3rem. -->
+<div class="@container text-center" data-reveal>
+  <div class="whitespace-nowrap text-[min(3rem,22cqi)] font-bold leading-tight tracking-tight text-primary" data-stat={value}>{value}</div>
   <div class="mt-2 text-sm font-semibold uppercase tracking-wider text-muted">{label}</div>
 </div>
 
