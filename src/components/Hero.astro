@@ -1,4 +1,5 @@
 ---
+import Ornament from './Ornament.astro';
 import { Picture } from 'astro:assets';
 import { link } from '../lib/site';
 import { resolveImage, cropSet, PICTURE_FORMATS } from '../lib/images.ts';
@@ -23,7 +24,8 @@ const crop = meta ? cropSet(meta, 4 / 5, [480, 640, 800, 1000]) : undefined;
 const base = import.meta.env.BASE_URL;
 ---
 
-<section class="hero bg-ivory pb-24 pt-10 md:pb-32 md:pt-16 lg:pb-40" aria-label="Introduction">
+<section class="relative isolate overflow-hidden hero bg-ivory pb-24 pt-10 md:pb-32 md:pt-16 lg:pb-40" aria-label="Introduction">
+  <Ornament variant="arcs" class="-right-48 -top-40 w-[34rem] md:-right-40 md:w-[48rem]" />
   <div class="container-lux grid items-center gap-16 lg:grid-cols-12 lg:gap-16">
     <div class="lg:col-span-7">
       <span class="rule-champagne mb-8" aria-hidden="true"></span>

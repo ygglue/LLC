@@ -1,4 +1,5 @@
 ---
+import Ornament from '../components/Ornament.astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import '../styles/global.css';
 import Nav from '../components/Nav.astro';
@@ -35,7 +36,8 @@ const missionCrop = cropSet(missionImg, 4 / 5, [400, 640, 900]);
   />
 
   <!-- Mission -->
-  <section class="bg-stone">
+  <section class="relative isolate overflow-hidden bg-stone">
+    <Ornament variant="sprig" class="-right-8 top-24 w-56 md:w-72" />
     <div class="container-lux py-24 md:py-32 lg:py-40">
       <div class="grid gap-12 lg:grid-cols-12 lg:gap-16">
         <div class="lg:col-span-5">
@@ -88,7 +90,8 @@ const missionCrop = cropSet(missionImg, 4 / 5, [400, 640, 900]);
   </section>
 
   <!-- Principles -->
-  <section class="bg-ivory">
+  <section class="relative isolate overflow-hidden bg-ivory">
+    <Ornament variant="grid" class="-left-32 -top-24 w-[26rem] md:w-[32rem]" />
     <div class="container-lux py-24 md:py-32 lg:py-40">
       <SectionHeader
         align="left"

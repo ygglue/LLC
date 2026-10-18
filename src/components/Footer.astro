@@ -1,5 +1,6 @@
 ---
 import Logo from './Logo.astro';
+import Ornament from './Ornament.astro';
 import { SITE_NAME, PHONE_DISPLAY, PHONE_HREF, EMAIL, AREA, INSTAGRAM, link } from '../lib/site';
 
 const services = [
@@ -23,7 +24,8 @@ const linkCls = 'text-[0.9375rem] text-on-dark-muted transition-colors duration-
 const hasInstagram = INSTAGRAM && INSTAGRAM !== '#';
 ---
 
-<footer class="bg-ink text-on-dark" data-dark>
+<footer class="relative isolate overflow-hidden bg-ink text-on-dark" data-dark>
+  <Ornament variant="monogram" tone="dark" class="-bottom-24 -right-16 w-[30rem] md:w-[42rem]" />
   <div class="container-lux">
     <!-- Directory -->
     <div class="grid gap-12 pb-16 pt-20 sm:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr_1.2fr] lg:gap-16 lg:pb-20 lg:pt-24">

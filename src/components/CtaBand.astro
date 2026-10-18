@@ -1,4 +1,5 @@
 ---
+import Ornament from './Ornament.astro';
 import Button from './Button.astro';
 
 /**
@@ -28,7 +29,8 @@ const {
 const dark = tone === 'dark';
 ---
 
-<section class={dark ? 'bg-ink' : 'border-t border-line bg-stone'} data-dark={dark ? '' : undefined}>
+<section class:list={['relative isolate overflow-hidden', dark ? 'bg-ink' : 'border-t border-line bg-stone']} data-dark={dark ? '' : undefined}>
+  <Ornament variant="fan" tone={dark ? 'dark' : 'light'} class="-bottom-1 left-1/2 w-[44rem] -translate-x-1/2 md:w-[60rem]" />
   <div class="container-lux py-24 text-center md:py-32 lg:py-40" data-reveal>
     <span class="rule-champagne mx-auto mb-8" aria-hidden="true"></span>
     <p class:list={['t-eyebrow', !dark && 'text-gold-deep']}>Begin</p>

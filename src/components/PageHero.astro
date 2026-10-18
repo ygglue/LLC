@@ -1,4 +1,5 @@
 ---
+import Ornament from './Ornament.astro';
 import { Picture } from 'astro:assets';
 import { resolveImage, cropSet, PICTURE_FORMATS } from '../lib/images.ts';
 
@@ -26,7 +27,8 @@ const fallbackSrc = imageSrc && !meta ? (/^(https?:)?\//.test(imageSrc) ? imageS
 const hasImage = Boolean(imageSrc);
 ---
 
-<section class="bg-ivory">
+<section class="relative isolate overflow-hidden bg-ivory">
+  <Ornament variant="arcs" class="-right-48 -top-48 w-[32rem] md:-right-40 md:w-[44rem]" />
   {hasImage ? (
     <div class="container-lux pt-16 pb-24 md:pt-20 md:pb-32">
       <div class="grid items-center gap-14 lg:grid-cols-12 lg:gap-16">
