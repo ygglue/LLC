@@ -88,6 +88,9 @@ const loose = [
     --foam-scale: 0.6;
     /* Edge bubbles run past the sides and, on small screens, the bottom: clip both
        so the sides and bottom stay flat, leaving room above for the crest. */
+    /* clip-path is paint-only, so overflow-x: clip is still needed to stop the
+       side bubbles from widening the page (horizontal scroll on phones). */
+    overflow-x: clip;
     clip-path: inset(-20rem 0 0 0);
   }
   @media (min-width: 640px) {
