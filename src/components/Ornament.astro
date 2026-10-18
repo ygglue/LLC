@@ -13,7 +13,7 @@ interface Props {
   /** Surface the ornament sits on; dark surfaces need a lower opacity. */
   tone?: 'light' | 'dark';
   /** Fade the strokes out toward one side so they stay clear of text there. */
-  fade?: 'left' | 'none';
+  fade?: 'left' | 'top' | 'none';
 }
 
 const { variant, class: cls = '', tone = 'light', fade = 'none' } = Astro.props;
@@ -30,7 +30,7 @@ const leaves: [number, number, number, number][] = [
 ---
 
 <svg
-  class:list={['ornament pointer-events-none absolute -z-10 select-none text-champagne', tone === 'dark' ? 'ornament-dark' : 'ornament-light', fade === 'left' && 'ornament-fade-left', cls]}
+  class:list={['ornament pointer-events-none absolute -z-10 select-none text-champagne', tone === 'dark' ? 'ornament-dark' : 'ornament-light', fade === 'left' && 'ornament-fade-left', fade === 'top' && 'ornament-fade-top', cls]}
   aria-hidden="true"
   focusable="false"
   fill="none"
@@ -119,6 +119,11 @@ const leaves: [number, number, number, number][] = [
   .ornament-fade-left {
     -webkit-mask-image: linear-gradient(to bottom, transparent 0%, transparent 68%, #000 88%);
     mask-image: linear-gradient(to bottom, transparent 0%, transparent 68%, #000 88%);
+  }
+  /* Keep only the lower band of the shape (below centred copy and buttons). */
+  .ornament-fade-top {
+    -webkit-mask-image: linear-gradient(to bottom, transparent 0%, transparent 64%, #000 94%);
+    mask-image: linear-gradient(to bottom, transparent 0%, transparent 64%, #000 94%);
   }
   @media (min-width: 1024px) {
     .ornament-fade-left {
