@@ -108,7 +108,7 @@ const pad = (n: number) => String(n).padStart(2, '0');
               <span class="t-italic text-lg leading-none text-gold" aria-hidden="true">{pad(i + 1)}</span>
               {service.slug === FLAGSHIP_SLUG && <span class="t-eyebrow">Signature</span>}
             </p>
-            <h3 class="svc-title mt-4 font-serif text-[1.625rem] font-normal leading-[1.15] text-ink">{service.title}</h3>
+            <h3 class="svc-title mt-4 font-serif text-[1.625rem] font-medium leading-[1.15] text-ink">{service.title}</h3>
             <a
               href={`${base}services/#${service.slug}`}
               draggable="false"

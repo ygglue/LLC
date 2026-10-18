@@ -74,42 +74,44 @@
 @layer components {
   .t-display {
     font-family: var(--font-serif);
-    font-weight: 300;
-    font-size: clamp(3rem, 7vw, 6.5rem);
-    line-height: 1;
-    letter-spacing: -0.01em;
+    font-weight: 400;
+    font-size: clamp(3.25rem, 7.5vw, 7rem);
+    line-height: 0.98;
+    letter-spacing: -0.015em;
   }
   .t-h1 {
     font-family: var(--font-serif);
-    font-weight: 300;
-    font-size: clamp(2.5rem, 5vw, 4.5rem);
-    line-height: 1.05;
+    font-weight: 400;
+    font-size: clamp(2.75rem, 5.5vw, 5rem);
+    line-height: 1.02;
+    letter-spacing: -0.01em;
   }
   .t-h2 {
     font-family: var(--font-serif);
-    font-weight: 400;
-    font-size: clamp(2rem, 3.6vw, 3.25rem);
-    line-height: 1.1;
+    font-weight: 500;
+    font-size: clamp(2.125rem, 3.6vw, 3.25rem);
+    line-height: 1.08;
+    letter-spacing: -0.005em;
   }
   .t-h3 {
     font-family: var(--font-serif);
-    font-weight: 400;
+    font-weight: 500;
     font-size: 1.75rem;
-    line-height: 1.2;
+    line-height: 1.15;
   }
   .t-h4 {
     font-family: var(--font-sans);
-    font-weight: 500;
+    font-weight: 600;
     font-size: 1rem;
     line-height: 1.4;
-    letter-spacing: 0.02em;
+    letter-spacing: 0.01em;
   }
   .t-eyebrow {
     font-family: var(--font-sans);
-    font-weight: 500;
-    font-size: 0.75rem;
+    font-weight: 600;
+    font-size: 0.6875rem;
     line-height: 1.4;
-    letter-spacing: 0.24em;
+    letter-spacing: 0.28em;
     text-transform: uppercase;
     color: var(--color-gold);
   }
@@ -119,8 +121,8 @@
   .t-lead {
     font-family: var(--font-sans);
     font-size: 1.125rem;
-    line-height: 1.7;
-    color: var(--color-muted);
+    line-height: 1.65;
+    color: var(--color-ink-soft);
   }
   @media (min-width: 768px) {
     .t-lead {
@@ -206,10 +208,10 @@
     min-height: 52px;
     padding-inline: 2rem;
     font-family: var(--font-sans);
-    font-weight: 500;
-    font-size: 0.75rem;
+    font-weight: 600;
+    font-size: 0.8125rem;
     line-height: 1.2;
-    letter-spacing: 0.2em;
+    letter-spacing: 0.14em;
     text-transform: uppercase;
     text-align: center;
     text-decoration: none;
@@ -266,9 +268,9 @@
     gap: 0.5rem;
     padding-block: 0.25rem;
     font-family: var(--font-sans);
-    font-weight: 500;
-    font-size: 0.75rem;
-    letter-spacing: 0.2em;
+    font-weight: 600;
+    font-size: 0.8125rem;
+    letter-spacing: 0.14em;
     text-transform: uppercase;
     text-decoration: none;
     color: var(--color-gold);
@@ -289,15 +291,18 @@
     bottom: 0;
     height: 1px;
     background: currentColor;
-    transform: scaleX(0);
+    opacity: 0.35;
+    transform: scaleX(1);
     transform-origin: left;
-    transition: transform var(--dur-base) var(--ease-lux);
+    transition:
+      opacity var(--dur-base) var(--ease-lux),
+      transform var(--dur-base) var(--ease-lux);
   }
   .link-lux:hover::after,
   .link-lux:focus-visible::after,
   .link-lux-ink:hover::after,
   .link-lux-ink:focus-visible::after {
-    transform: scaleX(1);
+    opacity: 1;
   }
 
   /* ========================================================================
