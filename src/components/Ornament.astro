@@ -7,20 +7,16 @@
  * e.g. <Ornament variant="arcs" class="-right-40 -top-40 w-[36rem]" />.
  */
 interface Props {
-  variant: 'arcs' | 'fan' | 'contour' | 'monogram' | 'sprig' | 'grid' | 'leaf';
+  variant: 'arcs' | 'fan' | 'contour' | 'monogram' | 'sprig' | 'grid' | 'wreath';
   /** Positioning / sizing utilities (absolute is applied for you). */
   class?: string;
   /** Surface the ornament sits on; dark surfaces need a lower opacity. */
   tone?: 'light' | 'dark';
   /** Fade the strokes out toward one side so they stay clear of text there. */
-  fade?: 'left' | 'top' | 'corners' | 'right' | 'none';
+  fade?: 'left' | 'top' | 'right' | 'none';
 }
 
 const { variant, class: cls = '', tone = 'light', fade = 'none' } = Astro.props;
-
-// Leaf tile (80×40), user-supplied asset (likely Hero Patterns "Leaf", CC BY 4.0).
-const LEAF_PATH = 'M0 40a19.96 19.96 0 0 1 5.9-14.11 20.17 20.17 0 0 1 19.44-5.2A20 20 0 0 1 20.2 40H0zM65.32.75A20.02 20.02 0 0 1 40.8 25.26 20.02 20.02 0 0 1 65.32.76zM.07 0h20.1l-.08.07A20.02 20.02 0 0 1 .75 5.25 20.08 20.08 0 0 1 .07 0zm1.94 40h2.53l4.26-4.24v-9.78A17.96 17.96 0 0 0 2 40zm5.38 0h9.8a17.98 17.98 0 0 0 6.67-16.42L7.4 40zm3.43-15.42v9.17l11.62-11.59c-3.97-.5-8.08.3-11.62 2.42zm32.86-.78A18 18 0 0 0 63.85 3.63L43.68 23.8zm7.2-19.17v9.15L62.43 2.22c-3.96-.5-8.05.3-11.57 2.4zm-3.49 2.72c-4.1 4.1-5.81 9.69-5.13 15.03l6.61-6.6V6.02c-.51.41-1 .85-1.48 1.33zM17.18 0H7.42L3.64 3.78A18 18 0 0 0 17.18 0zM2.08 0c-.01.8.04 1.58.14 2.37L4.59 0H2.07z';
-const patternId = `leaf-${Math.random().toString(36).slice(2, 8)}`;
 
 const range = (n: number, f: (i: number) => number) => Array.from({ length: n }, (_, i) => f(i));
 // Fan rays fanning across a half circle, centred at the bottom middle.
@@ -31,10 +27,47 @@ const leaves: [number, number, number, number][] = [
   [124, 240, -50, 38], [164, 232, 30, 36], [160, 182, -54, 36], [196, 180, 26, 34],
   [198, 132, -58, 34], [230, 132, 20, 30], [236, 88, -62, 30], [262, 88, 14, 26],
 ];
+
+// Laurel wreath: two branches rising from a tie at the bottom, open at the top.
+// Angles in degrees, screen space (0° = right, 90° = down).
+const W = { cx: 200, cy: 200, r: 138 };
+const pt = (deg: number, r = W.r) => {
+  const a = (deg * Math.PI) / 180;
+  return [W.cx + Math.cos(a) * r, W.cy + Math.sin(a) * r] as const;
+};
+const arc = (from: number, to: number) => {
+  const [x1, y1] = pt(from);
+  const [x2, y2] = pt(to);
+  const sweep = to > from ? 1 : 0;
+  return `M ${x1.toFixed(1)} ${y1.toFixed(1)} A ${W.r} ${W.r} 0 0 ${sweep} ${x2.toFixed(1)} ${y2.toFixed(1)}`;
+};
+// Each branch: stem angles and leaves alternating outside/inside the stem,
+// tilted toward the growing tip and shrinking slightly as they climb.
+type Leaf = { x: number; y: number; rot: number; rx: number };
+const branch = (from: number, to: number) => {
+  const dir = Math.sign(to - from);
+  const leaves: Leaf[] = [];
+  const steps = 11;
+  for (let i = 0; i <= steps; i++) {
+    const t = i / steps;
+    const deg = from + (to - from) * (0.06 + t * 0.9);
+    const size = 17 - t * 6;
+    for (const side of [1, -1]) {
+      const [x, y] = pt(deg, W.r + side * (size * 0.62));
+      const tangent = deg + 90 * dir;
+      leaves.push({ x, y, rot: tangent - side * dir * 32, rx: size });
+    }
+  }
+  const [tx, ty] = pt(to + dir * 3);
+  leaves.push({ x: tx, y: ty, rot: to + 90 * dir, rx: 11 });
+  return { stem: arc(from, to), leaves };
+};
+const wreath = [branch(100, 252), branch(80, -72)];
+const berries = [150, 205, 240, 30, -25, -60].map((d) => pt(d, W.r - 4));
 ---
 
 <svg
-  class:list={['ornament pointer-events-none absolute -z-10 select-none text-champagne', tone === 'dark' ? 'ornament-dark' : 'ornament-light', fade === 'left' && 'ornament-fade-left', fade === 'top' && 'ornament-fade-top', fade === 'corners' && 'ornament-fade-corners', fade === 'right' && 'ornament-fade-right', cls]}
+  class:list={['ornament pointer-events-none absolute -z-10 select-none text-champagne', tone === 'dark' ? 'ornament-dark' : 'ornament-light', fade === 'left' && 'ornament-fade-left', fade === 'top' && 'ornament-fade-top', fade === 'right' && 'ornament-fade-right', cls]}
   aria-hidden="true"
   focusable="false"
   fill="none"
@@ -46,18 +79,26 @@ const leaves: [number, number, number, number][] = [
   {...(variant === 'monogram' && { viewBox: '0 0 600 420' })}
   {...(variant === 'sprig' && { viewBox: '0 0 320 420' })}
   {...(variant === 'grid' && { viewBox: '0 0 400 400' })}
+  {...(variant === 'wreath' && { viewBox: '0 0 400 400' })}
 >
-  {variant === 'leaf' && (
-    <>
-      <defs>
-        <!-- Native 80×40 tiling; the corner mask does the fading. Drawn as a
-             hairline outline (not filled) to match the other line ornaments. -->
-        <pattern id={patternId} width="80" height="40" patternUnits="userSpaceOnUse">
-          <path d={LEAF_PATH} fill="none" stroke="currentColor" stroke-width="0.6" stroke-linejoin="round" />
-        </pattern>
-      </defs>
-      <rect width="100%" height="100%" fill={`url(#${patternId})`} stroke="none" />
-    </>
+  {variant === 'wreath' && (
+    <g stroke-linecap="round">
+      {wreath.map((b) => (
+        <>
+          <path d={b.stem} vector-effect="non-scaling-stroke" />
+          {b.leaves.map((l) => (
+            <g transform={`rotate(${l.rot.toFixed(1)} ${l.x.toFixed(1)} ${l.y.toFixed(1)})`}>
+              <ellipse cx={l.x.toFixed(1)} cy={l.y.toFixed(1)} rx={l.rx.toFixed(1)} ry={(l.rx * 0.36).toFixed(1)} vector-effect="non-scaling-stroke" />
+              <line x1={(l.x - l.rx * 0.8).toFixed(1)} y1={l.y.toFixed(1)} x2={(l.x + l.rx * 0.8).toFixed(1)} y2={l.y.toFixed(1)} vector-effect="non-scaling-stroke" />
+            </g>
+          ))}
+        </>
+      ))}
+      {berries.map(([x, y]) => <circle cx={x.toFixed(1)} cy={y.toFixed(1)} r="3.2" vector-effect="non-scaling-stroke" />)}
+      <!-- Ribbon tie where the branches meet -->
+      <path d="M 186 336 C 178 352, 170 362, 158 372 M 214 336 C 222 352, 230 362, 242 372" vector-effect="non-scaling-stroke" />
+      <ellipse cx="200" cy="338" rx="9" ry="6" vector-effect="non-scaling-stroke" />
+    </g>
   )}
   {variant === 'arcs' && range(10, (i) => 60 + i * 56).map((r) => <circle cx="600" cy="0" r={r} vector-effect="non-scaling-stroke" />)}
 
@@ -135,22 +176,6 @@ const leaves: [number, number, number, number][] = [
   .ornament-fade-left {
     -webkit-mask-image: linear-gradient(to bottom, transparent 0%, transparent 68%, #000 88%);
     mask-image: linear-gradient(to bottom, transparent 0%, transparent 68%, #000 88%);
-  }
-  /* Only the two bottom corners, fading out toward the centre and top.
-     Fixed-size corners so tall stacked layouts don't pull leaves up into copy. */
-  .ornament-fade-corners {
-    --corner: 11rem 8rem;
-    -webkit-mask-image:
-      radial-gradient(ellipse var(--corner) at 0% 100%, #000 0%, transparent 100%),
-      radial-gradient(ellipse var(--corner) at 100% 100%, #000 0%, transparent 100%);
-    mask-image:
-      radial-gradient(ellipse var(--corner) at 0% 100%, #000 0%, transparent 100%),
-      radial-gradient(ellipse var(--corner) at 100% 100%, #000 0%, transparent 100%);
-  }
-  @media (min-width: 1024px) {
-    .ornament-fade-corners {
-      --corner: 24rem 17rem;
-    }
   }
   /* Anchored to the right edge: strongest at the edge, gone before mid-section. */
   .ornament-fade-right {
