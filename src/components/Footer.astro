@@ -1,4 +1,5 @@
 ---
+import Logo from './Logo.astro';
 import { SITE_NAME, PHONE_DISPLAY, PHONE_HREF, EMAIL, AREA, INSTAGRAM, link } from '../lib/site';
 
 const services = [
@@ -17,83 +18,73 @@ const company = [
   { path: '/quote/', label: 'Get a Free Quote' },
   { path: '/contact/', label: 'Contact Us' },
 ];
+
+const linkCls = 'text-[0.9375rem] text-on-dark-muted transition-colors duration-[600ms] hover:text-on-dark';
+const hasInstagram = INSTAGRAM && INSTAGRAM !== '#';
 ---
 
-<footer class="bg-footer text-white">
-  <div class="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
-    <div class="grid gap-10 sm:grid-cols-2 lg:grid-cols-[1.3fr_1fr_0.8fr_1.2fr] lg:gap-12">
+<footer class="bg-ink text-on-dark" data-dark>
+  <div class="container-lux">
+    <!-- Closing line -->
+    <div class="flex flex-col gap-10 py-24 md:flex-row md:items-end md:justify-between md:py-32" data-reveal>
+      <p class="t-h1 max-w-2xl text-on-dark">
+        Spaces, <em class="t-italic font-normal">quietly</em> perfected.
+      </p>
+      <a href={link('/quote/')} class="btn btn-on-dark shrink-0 self-start md:self-auto">Get a Free Quote</a>
+    </div>
+
+    <hr class="hairline" />
+
+    <!-- Directory -->
+    <div class="grid gap-12 py-16 sm:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr_1.2fr] lg:gap-16 lg:py-20">
       <div>
-        <div class="flex items-center gap-2.5">
-          <span class="flex h-10 w-10 items-center justify-center rounded-lg bg-white font-bold text-primary">LD</span>
-          <span class="font-bold tracking-tight">Luxury Duo Cleaning</span>
-        </div>
-        <p class="mt-4 text-sm leading-relaxed text-white/70">
+        <Logo tone="ivory" />
+        <p class="mt-6 max-w-xs text-[0.9375rem] leading-relaxed text-on-dark-muted">
           Precision cleaning for contractors, commercial properties, and homeowners across the Orlando area.
         </p>
       </div>
 
       <nav aria-label="Services">
-        <h3 class="text-sm font-bold uppercase tracking-[0.12em] text-white/70">Services</h3>
-        <ul class="mt-4 space-y-2.5">
+        <h3 class="t-eyebrow">Services</h3>
+        <ul class="mt-6 space-y-3">
           {services.map((s) => (
             <li>
-              <a href={`${link('/services/')}${s.anchor}`} class="text-sm text-white/85 hover:text-white hover:underline">
-                {s.label}
-              </a>
+              <a href={`${link('/services/')}${s.anchor}`} class={linkCls}>{s.label}</a>
             </li>
           ))}
         </ul>
       </nav>
 
       <nav aria-label="Company">
-        <h3 class="text-sm font-bold uppercase tracking-[0.12em] text-white/70">Company</h3>
-        <ul class="mt-4 space-y-2.5">
+        <h3 class="t-eyebrow">Company</h3>
+        <ul class="mt-6 space-y-3">
           {company.map((c) => (
             <li>
-              <a href={link(c.path)} class="text-sm text-white/85 hover:text-white hover:underline">
-                {c.label}
-              </a>
+              <a href={link(c.path)} class={linkCls}>{c.label}</a>
             </li>
           ))}
         </ul>
       </nav>
 
       <div>
-        <h3 class="text-sm font-bold uppercase tracking-[0.12em] text-white/70">Contact</h3>
-        <ul class="mt-4 space-y-3 text-sm text-white/85">
-          <li class="flex items-center gap-2.5">
-            <svg class="h-4 w-4 shrink-0 text-silver" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z" />
-            </svg>
-            <a href={PHONE_HREF} class="hover:text-white hover:underline">{PHONE_DISPLAY}</a>
-          </li>
-          <li class="flex items-center gap-2.5">
-            <svg class="h-4 w-4 shrink-0 text-silver" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
-              <polyline points="22,6 12,13 2,6" />
-            </svg>
-            <a href={`mailto:${EMAIL}`} class="break-all hover:text-white hover:underline">{EMAIL}</a>
-          </li>
-          <li class="flex items-center gap-2.5">
-            <svg class="h-4 w-4 shrink-0 text-silver" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z" />
-              <circle cx="12" cy="10" r="3" />
-            </svg>
-            <span>{AREA}</span>
-          </li>
+        <h3 class="t-eyebrow">Contact</h3>
+        <ul class="mt-6 space-y-3">
+          <li><a href={PHONE_HREF} class={linkCls}>{PHONE_DISPLAY}</a></li>
+          <li><a href={`mailto:${EMAIL}`} class={`${linkCls} break-all`}>{EMAIL}</a></li>
+          <li class="text-[0.9375rem] text-on-dark-muted">{AREA}</li>
         </ul>
       </div>
     </div>
 
-    <div class="mt-12 flex flex-col items-center justify-between gap-4 border-t border-white/15 pt-6 sm:flex-row">
-      <span class="text-sm text-white/70">&copy; 2026 {SITE_NAME}. All rights reserved.</span>
-      <a href={INSTAGRAM} aria-label="Instagram" class="inline-flex h-11 w-11 items-center justify-center rounded-full text-white/80 ring-1 ring-white/20 hover:bg-white/10 hover:text-white">
-        <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
-          <path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z" />
-          <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" />
-        </svg>
-      </a>
+    <hr class="hairline" />
+
+    <div class="flex flex-col gap-4 py-8 sm:flex-row sm:items-center sm:justify-between">
+      <span class="t-small text-on-dark-muted">&copy; 2026 {SITE_NAME}. All rights reserved.</span>
+      {hasInstagram && (
+        <a href={INSTAGRAM} class="t-small uppercase tracking-[0.2em] text-on-dark-muted transition-colors duration-[600ms] hover:text-on-dark">
+          Instagram
+        </a>
+      )}
     </div>
   </div>
 </footer>

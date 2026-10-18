@@ -1,13 +1,12 @@
 ---
 /* ContactForm — STUB mode (no network). Real Formspree wired post-signoff. */
-const inputCls =
-  'block w-full min-h-12 rounded-lg border border-field bg-white px-4 py-3 text-base text-ink placeholder:text-muted hover:border-muted focus:border-primary';
-const labelCls = 'mb-1 block text-sm font-semibold text-ink';
-const errorCls = 'mt-1 text-sm text-red-600';
+const inputCls = 'field';
+const labelCls = 'field-label mb-1';
+const errorCls = 'field-error mt-2';
 ---
 
 <div data-reveal data-form-wrap="contact">
-  <form id="contact-form" method="post" novalidate class="flex flex-col gap-5">
+  <form id="contact-form" method="post" novalidate class="flex flex-col gap-9">
     <div>
       <label class={labelCls} for="contact-name">Name *</label>
       <input
@@ -23,7 +22,7 @@ const errorCls = 'mt-1 text-sm text-red-600';
       <p id="contact-name-error" class={errorCls} hidden>Please enter your name.</p>
     </div>
 
-    <div class="grid gap-5 sm:grid-cols-2">
+    <div class="grid gap-9 sm:grid-cols-2 sm:gap-x-10">
       <div>
         <label class={labelCls} for="contact-email">Email *</label>
         <input
@@ -54,7 +53,7 @@ const errorCls = 'mt-1 text-sm text-red-600';
     </div>
 
     <div>
-      <label class={labelCls} for="contact-subject">Subject *</label>
+      <label class:list={[labelCls, 'mb-3']} for="contact-subject">Subject *</label>
       <select
         class={inputCls}
         id="contact-subject"
@@ -73,7 +72,7 @@ const errorCls = 'mt-1 text-sm text-red-600';
     </div>
 
     <div>
-      <label class={labelCls} for="contact-message">Message *</label>
+      <label class:list={[labelCls, 'mb-3']} for="contact-message">Message *</label>
       <textarea
         class={inputCls}
         id="contact-message"
@@ -86,20 +85,25 @@ const errorCls = 'mt-1 text-sm text-red-600';
       <p id="contact-message-error" class={errorCls} hidden>Please enter a message.</p>
     </div>
 
-    <button
-      type="submit"
-      class="min-h-12 w-full rounded-lg border-2 border-primary bg-primary px-6 py-3 text-center font-bold text-white transition-colors hover:border-accent-hover hover:bg-accent-hover"
-    >
-      Send Message
-    </button>
-    <p class="text-center text-sm text-muted">
-      We typically respond within a few hours during business days.
-    </p>
+    <div class="mt-2 flex flex-col gap-5">
+      <button type="submit" class="btn btn-primary w-full">Send Message</button>
+      <p class="t-small text-center text-muted">
+        We typically respond within a few hours during business days.
+      </p>
+    </div>
   </form>
 
-  <div id="contact-success" hidden tabindex="-1" class="rounded-xl border border-line bg-bg-alt p-8 text-center" role="status">
-    <h3 class="text-2xl font-bold text-ink">Thanks — message received!</h3>
-    <p class="mx-auto mt-2 max-w-md text-muted">
+  <div
+    id="contact-success"
+    hidden
+    tabindex="-1"
+    class="form-success flex-col items-center border border-line bg-paper px-6 py-14 text-center sm:px-10 sm:py-16"
+    role="status"
+  >
+    <span class="rule-champagne" aria-hidden="true"></span>
+    <p class="t-eyebrow mt-6">Received</p>
+    <h3 class="t-h2 mt-4 text-ink">Thanks — message received!</h3>
+    <p class="mx-auto mt-5 max-w-md text-muted">
       Preview mode — not sending. Real Formspree wired post-signoff.
     </p>
   </div>
@@ -120,7 +124,6 @@ const errorCls = 'mt-1 text-sm text-red-600';
       if (!input) return;
       const err = document.getElementById(input.id + '-error');
       input.setAttribute('aria-invalid', hasError ? 'true' : 'false');
-      input.classList.toggle('border-red-600!', hasError);
       if (err) {
         if (hasError) err.removeAttribute('hidden');
         else err.setAttribute('hidden', '');
@@ -190,3 +193,25 @@ const errorCls = 'mt-1 text-sm text-red-600';
   initContact();
   document.addEventListener('astro:page-load', initContact);
 </script>
+
+<style>
+  .form-success:not([hidden]) {
+    display: flex;
+  }
+  /* Programmatic focus target (tabindex=-1), not a control: no ring */
+  .form-success:focus,
+  .form-success:focus-visible {
+    outline: none;
+  }
+  /* Fields signal focus with a 2px ink rule (global.css), not a box outline */
+  .field:focus-visible {
+    outline: none;
+  }
+  /* Placeholder option reads as a hint, not a value */
+  select.field:has(option[value='']:checked) {
+    color: var(--color-muted);
+  }
+  select.field option {
+    color: var(--color-ink);
+  }
+</style>

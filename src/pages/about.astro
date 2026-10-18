@@ -14,7 +14,6 @@ import { Picture } from 'astro:assets';
 import whyUs from '../assets/images/why-us.jpg';
 import { widthSet, PICTURE_FORMATS } from '../lib/images';
 
-const base = import.meta.env.BASE_URL;
 ---
 
 <BaseLayout
@@ -27,110 +26,161 @@ const base = import.meta.env.BASE_URL;
     eyebrow="About Us"
     title="Built on Precision. Driven by Results."
     lead="Luxury Duo Cleaning LLC was founded in Orlando with one goal: to become the cleaning company that contractors, businesses, and homeowners actually trust."
+    imageSrc="images/services/residential.jpg"
+    imageAlt="Robot vacuum gliding beneath a sofa in a bright Orlando living room"
   />
 
-  <section class="mx-auto max-w-7xl px-4 py-16 sm:px-6 sm:py-20 lg:px-8">
-    <div class="grid items-center gap-10 lg:grid-cols-2">
-      <div data-reveal>
-        <h2 class="text-3xl font-bold tracking-tight text-ink sm:text-4xl">Our Mission</h2>
-        <p class="mt-4 text-lg leading-relaxed text-muted">
-          To give every client a space that's truly clean — on schedule, to
-          spec, and without the follow-up calls. Whether it's a job site
-          before handover or your home before guests arrive, you should be
-          able to count on us to get it right the first time.
-        </p>
-        <p class="mt-4 leading-relaxed text-muted">
-          That means clear quotes, crews that show up when promised, and the
-          same precision and professionalism you expect from the contractors
-          and businesses you already trust.
-        </p>
+  <!-- Mission -->
+  <section class="bg-stone">
+    <div class="container-lux py-24 md:py-32 lg:py-40">
+      <div class="grid gap-12 lg:grid-cols-12 lg:gap-16">
+        <div class="lg:col-span-5">
+          <SectionHeader align="left" number="01" eyebrow="Purpose" title="Our Mission" />
+        </div>
+        <div class="lg:col-span-6 lg:col-start-7 lg:pt-[4.25rem]" data-reveal>
+          <p class="font-serif text-[1.625rem] font-light leading-[1.4] text-ink md:text-[2rem]">
+            To give every client a space that's truly clean — on schedule, to
+            spec, and without the follow-up calls. Whether it's a job site
+            before handover or your home before guests arrive, you should be
+            able to count on us to get it right the first time.
+          </p>
+          <p class="mt-8 max-w-xl text-muted">
+            That means clear quotes, crews that show up when promised, and the
+            same precision and professionalism you expect from the contractors
+            and businesses you already trust.
+          </p>
+        </div>
       </div>
-      <div class="grid grid-cols-1 gap-8 rounded-xl border border-line bg-bg-alt p-10 sm:grid-cols-3 lg:grid-cols-1 xl:grid-cols-3 xl:gap-4 xl:px-6" data-reveal="right">
-        <Stat value="100%" label="Licensed & Insured" />
-        <Stat value="Same-day" label="Quote Turnaround" />
-        <Stat value="Orlando" label="Serving All Areas" />
+
+      <div class="mt-20 grid border-t border-line sm:grid-cols-3 md:mt-28" data-reveal>
+        <div class="border-b border-line py-10 sm:border-b-0 sm:pr-8">
+          <Stat value="100%" label="Licensed & Insured" />
+        </div>
+        <div class="border-b border-line py-10 sm:border-b-0 sm:border-l sm:px-8 lg:px-12">
+          <Stat value="Same-day" label="Quote Turnaround" />
+        </div>
+        <div class="py-10 sm:border-l sm:border-line sm:pl-8 lg:pl-12">
+          <Stat value="Orlando" label="Serving All Areas" />
+        </div>
       </div>
     </div>
   </section>
 
-  <section class="bg-bg-alt">
-    <div class="mx-auto max-w-7xl px-4 py-16 sm:px-6 sm:py-20 lg:px-8">
+  <!-- Principles -->
+  <section class="bg-ivory">
+    <div class="container-lux py-24 md:py-32 lg:py-40">
       <SectionHeader
+        align="left"
+        number="02"
+        eyebrow="Principles"
         title="What Sets Us Apart"
         lead="Three principles that drive every job we take on."
       />
-      <div class="mt-10 grid gap-6 md:grid-cols-3">
-        <article class="rounded-xl border border-line bg-white p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md" data-reveal data-reveal-delay="0">
-          <h3 class="text-xl font-bold text-ink">Efficiency</h3>
-          <p class="mt-2 text-muted">We work fast without cutting corners. Contractor schedules don't wait, and neither do we. Every minute on-site is purposeful.</p>
-        </article>
-        <article class="rounded-xl border border-line bg-white p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md" data-reveal data-reveal-delay="1">
-          <h3 class="text-xl font-bold text-ink">Reliability</h3>
-          <p class="mt-2 text-muted">We show up when we say we will. Consistent scheduling, consistent quality, consistent communication. No surprises.</p>
-        </article>
-        <article class="rounded-xl border border-line bg-white p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md" data-reveal data-reveal-delay="2">
-          <h3 class="text-xl font-bold text-ink">Attention to Detail</h3>
-          <p class="mt-2 text-muted">We notice what others overlook. Baseboards, window tracks, grout lines — the details that make a space actually clean, not just tidy.</p>
-        </article>
+      <div class="mt-16 grid border-t border-line md:mt-20 md:grid-cols-3">
+        {[
+          {
+            n: 'I',
+            title: 'Efficiency',
+            text: "We work fast without cutting corners. Contractor schedules don't wait, and neither do we. Every minute on-site is purposeful.",
+          },
+          {
+            n: 'II',
+            title: 'Reliability',
+            text: 'We show up when we say we will. Consistent scheduling, consistent quality, consistent communication. No surprises.',
+          },
+          {
+            n: 'III',
+            title: 'Attention to Detail',
+            text: 'We notice what others overlook. Baseboards, window tracks, grout lines — the details that make a space actually clean, not just tidy.',
+          },
+        ].map((p, i) => (
+          <article
+            class:list={[
+              'py-10 md:py-12',
+              i > 0 && 'border-t border-line md:border-t-0 md:border-l',
+              i === 0 ? 'md:pr-10 lg:pr-14' : 'md:px-10 lg:px-14',
+              i === 2 && 'md:pr-0 lg:pr-0',
+            ]}
+            data-reveal
+            style={`transition-delay: ${i * 120}ms`}
+          >
+            <p class="t-italic text-2xl leading-none text-gold-deep" aria-hidden="true">{p.n}</p>
+            <h3 class="t-h3 mt-8 text-ink">{p.title}</h3>
+            <p class="mt-4 text-muted">{p.text}</p>
+          </article>
+        ))}
       </div>
     </div>
   </section>
 
-  <section class="mx-auto max-w-7xl px-4 py-16 sm:px-6 sm:py-20 lg:px-8">
-    <SectionHeader
-      title="What We Do"
-      lead="Six specialized cleaning services, each built for a different kind of client."
-    />
-    <div class="mt-10" data-reveal>
-      <RoundCarousel />
+  <!-- Services strip -->
+  <section class="bg-stone">
+    <div class="container-lux py-24 md:py-32 lg:py-40">
+      <SectionHeader
+        align="left"
+        number="03"
+        eyebrow="Services"
+        title="What We Do"
+        lead="Six specialized cleaning services, each built for a different kind of client."
+      />
+      <div class="mt-16 md:mt-20" data-reveal>
+        <RoundCarousel />
+      </div>
     </div>
   </section>
 
-  <section class="bg-bg-alt">
-    <div class="mx-auto max-w-7xl px-4 py-16 sm:px-6 sm:py-20 lg:px-8">
+  <!-- Our story -->
+  <section class="bg-ivory">
+    <div class="container-lux py-24 md:py-32 lg:py-40">
       <SectionHeader
+        align="left"
+        number="04"
+        eyebrow="Heritage"
         title="Our Story"
         lead="From a single crew to a trusted Orlando cleaning partner."
       />
-      <div class="mt-10 grid items-center gap-10 lg:grid-cols-2">
-        <div data-reveal>
-          <p class="text-xl font-semibold leading-relaxed text-ink sm:text-2xl">
-            Luxury Duo Cleaning LLC was started with a simple belief: that
-            cleaning is a service business, and service means showing up,
-            doing the work right, and earning the next job.
-          </p>
-          <p class="mt-4 text-xl leading-relaxed text-ink">
+      <div class="mt-16 grid gap-12 md:mt-24 lg:grid-cols-12 lg:gap-16">
+        <p class="t-italic text-[1.75rem] font-light leading-[1.35] text-ink md:text-[2.25rem] lg:col-span-8 lg:col-start-2" data-reveal>
+          Luxury Duo Cleaning LLC was started with a simple belief: that
+          cleaning is a service business, and service means showing up,
+          doing the work right, and earning the next job.
+        </p>
+        <div class="max-w-xl space-y-6 text-muted lg:col-span-5 lg:col-start-2 lg:self-center" data-reveal>
+          <p>
             Based in Orlando, we started serving residential clients and
             quickly expanded into commercial and construction cleaning as
             contractors recognized the quality of our work. Today, we serve
             general contractors, property managers, Airbnb hosts, and
             homeowners across the greater Orlando area.
           </p>
-          <p class="mt-4 text-xl leading-relaxed text-ink">
+          <p>
             We're still growing, and we're still hands-on. Every job gets the
             same attention to detail whether it's a single-family home or a
             large commercial buildout.
           </p>
         </div>
-        <figure data-reveal="right" class="group overflow-hidden rounded-xl border border-line shadow-sm">
-          <Picture
-            src={whyUs}
-            alt="Two-person Luxury Duo Cleaning crew wiping down a table in Orlando FL"
-            formats={[...PICTURE_FORMATS]}
-            fallbackFormat="jpg"
-            widths={widthSet(whyUs, [400])}
-            sizes="(min-width: 1280px) 560px, (min-width: 1024px) 45vw, (min-width: 640px) calc(100vw - 48px), calc(100vw - 32px)"
-            loading="lazy"
-            decoding="async"
-            class="aspect-[4/3] w-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
-            pictureAttributes={{ class: 'contents' }}
-          />
+        <figure data-reveal class="group frame w-full max-w-[520px] lg:col-span-5 lg:col-start-8 lg:justify-self-end">
+          <div class="overflow-hidden">
+            <Picture
+              src={whyUs}
+              alt="Two-person Luxury Duo Cleaning crew wiping down a table in Orlando FL"
+              formats={[...PICTURE_FORMATS]}
+              fallbackFormat="jpg"
+              widths={widthSet(whyUs, [400])}
+              sizes="(min-width: 1024px) 460px, (min-width: 568px) 520px, calc(100vw - 48px)"
+              loading="lazy"
+              decoding="async"
+              class="img-zoom aspect-[3/2] w-full object-cover"
+              pictureAttributes={{ class: 'contents' }}
+            />
+          </div>
         </figure>
       </div>
     </div>
   </section>
 
   <CtaBand
+    tone="stone"
     title="Ready for a Cleaner Space?"
     lead="Tell us about your property and we'll send a detailed estimate within hours."
     primaryHref={link('/quote/')}

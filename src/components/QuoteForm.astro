@@ -1,14 +1,15 @@
 ---
 /* QuoteForm — STUB mode (no network). Real Formspree wired post-signoff. */
-const inputCls =
-  'block w-full min-h-12 rounded-lg border border-field bg-white px-4 py-3 text-base text-ink placeholder:text-muted hover:border-muted focus:border-primary';
-const labelCls = 'mb-1 block text-sm font-semibold text-ink';
-const errorCls = 'mt-1 text-sm text-red-600';
+const inputCls = 'field';
+const labelCls = 'field-label mb-1';
+/* select / textarea carry a full border, so give their labels more air */
+const boxLabelCls = 'field-label mb-3';
+const errorCls = 'field-error mt-2';
 ---
 
 <div data-reveal data-form-wrap="quote">
-  <form id="quote-form" method="post" novalidate class="flex flex-col gap-5">
-    <div class="grid gap-5 sm:grid-cols-2">
+  <form id="quote-form" method="post" novalidate class="flex flex-col gap-9">
+    <div class="grid gap-9 sm:grid-cols-2 sm:gap-x-10">
       <div>
         <label class={labelCls} for="quote-name">Full Name *</label>
         <input
@@ -39,7 +40,7 @@ const errorCls = 'mt-1 text-sm text-red-600';
       </div>
     </div>
 
-    <div class="grid gap-5 sm:grid-cols-2">
+    <div class="grid gap-9 sm:grid-cols-2 sm:gap-x-10">
       <div>
         <label class={labelCls} for="quote-email">Email Address *</label>
         <input
@@ -70,9 +71,9 @@ const errorCls = 'mt-1 text-sm text-red-600';
       </div>
     </div>
 
-    <div class="grid gap-5 sm:grid-cols-2">
+    <div class="grid gap-9 sm:grid-cols-2 sm:gap-x-10">
       <div>
-        <label class={labelCls} for="service-type">Service Needed *</label>
+        <label class={boxLabelCls} for="service-type">Service Needed *</label>
         <select
           class={inputCls}
           id="service-type"
@@ -92,7 +93,7 @@ const errorCls = 'mt-1 text-sm text-red-600';
         <p id="service-type-error" class={errorCls} hidden>Please select a service.</p>
       </div>
       <div>
-        <label class={labelCls} for="property-type">Property Type *</label>
+        <label class={boxLabelCls} for="property-type">Property Type *</label>
         <select
           class={inputCls}
           id="property-type"
@@ -111,7 +112,7 @@ const errorCls = 'mt-1 text-sm text-red-600';
     </div>
 
     <div id="construction-fields" hidden>
-      <div class="grid gap-5 sm:grid-cols-2">
+      <div class="grid gap-9 sm:grid-cols-2 sm:gap-x-10">
         <div>
           <label class={labelCls} for="square-footage">Approx. Square Footage</label>
           <input
@@ -131,7 +132,7 @@ const errorCls = 'mt-1 text-sm text-red-600';
     </div>
 
     <div>
-      <label class={labelCls} for="quote-timeline">Preferred Timeline</label>
+      <label class={boxLabelCls} for="quote-timeline">Preferred Timeline</label>
       <select class={inputCls} id="quote-timeline" name="timeline">
         <option value="" disabled selected>Select a timeline</option>
         <option value="asap">As soon as possible</option>
@@ -143,7 +144,7 @@ const errorCls = 'mt-1 text-sm text-red-600';
     </div>
 
     <div>
-      <label class={labelCls} for="quote-details">Additional Details</label>
+      <label class={boxLabelCls} for="quote-details">Additional Details</label>
       <textarea
         class={inputCls}
         id="quote-details"
@@ -153,20 +154,25 @@ const errorCls = 'mt-1 text-sm text-red-600';
       ></textarea>
     </div>
 
-    <button
-      type="submit"
-      class="min-h-12 w-full rounded-lg border-2 border-primary bg-primary px-6 py-3 text-center font-bold text-white transition-colors hover:border-accent-hover hover:bg-accent-hover"
-    >
-      Submit Quote Request
-    </button>
-    <p class="text-center text-sm text-muted">
-      We’ll review your request and respond with a detailed estimate within hours. No obligation, no pressure.
-    </p>
+    <div class="mt-2 flex flex-col gap-5">
+      <button type="submit" class="btn btn-primary w-full">Submit Quote Request</button>
+      <p class="t-small text-center text-muted">
+        We’ll review your request and respond with a detailed estimate within hours. No obligation, no pressure.
+      </p>
+    </div>
   </form>
 
-  <div id="quote-success" hidden tabindex="-1" class="rounded-xl border border-line bg-bg-alt p-8 text-center" role="status">
-    <h3 class="text-2xl font-bold text-ink">Thanks — we got your request!</h3>
-    <p class="mx-auto mt-2 max-w-md text-muted">
+  <div
+    id="quote-success"
+    hidden
+    tabindex="-1"
+    class="form-success flex-col items-center border border-line bg-paper px-6 py-14 text-center sm:px-10 sm:py-16"
+    role="status"
+  >
+    <span class="rule-champagne" aria-hidden="true"></span>
+    <p class="t-eyebrow mt-6">Received</p>
+    <h3 class="t-h2 mt-4 text-ink">Thanks — we got your request!</h3>
+    <p class="mx-auto mt-5 max-w-md text-muted">
       Preview mode — not sending. Real Formspree wired post-signoff.
     </p>
   </div>
@@ -200,7 +206,6 @@ const errorCls = 'mt-1 text-sm text-red-600';
       if (!input) return;
       const err = document.getElementById(input.id + '-error');
       input.setAttribute('aria-invalid', hasError ? 'true' : 'false');
-      input.classList.toggle('border-red-600!', hasError);
       if (err) {
         if (hasError) err.removeAttribute('hidden');
         else err.setAttribute('hidden', '');
@@ -260,6 +265,13 @@ const errorCls = 'mt-1 text-sm text-red-600';
     } catch (e) {
       /* ignore */
     }
+    // Completion date can't be in the past
+    const projectDate = document.getElementById('project-date');
+    if (projectDate) {
+      const now = new Date();
+      const pad = (n) => String(n).padStart(2, '0');
+      projectDate.min = `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}`;
+    }
     toggleConstruction();
     serviceSelect?.addEventListener('change', toggleConstruction);
 
@@ -297,3 +309,30 @@ const errorCls = 'mt-1 text-sm text-red-600';
   initQuote();
   document.addEventListener('astro:page-load', initQuote);
 </script>
+
+<style>
+  .form-success:not([hidden]) {
+    display: flex;
+  }
+  /* Programmatic focus target (tabindex=-1), not a control: no ring */
+  .form-success:focus,
+  .form-success:focus-visible {
+    outline: none;
+  }
+  /* Fields signal focus with a 2px ink rule (global.css), not a box outline */
+  .field:focus-visible {
+    outline: none;
+  }
+  /* Placeholder option reads as a hint, not a value */
+  select.field:has(option[value='']:checked) {
+    color: var(--color-muted);
+  }
+  select.field option {
+    color: var(--color-ink);
+  }
+  /* Native date control: keep the calendar glyph quiet */
+  input[type='date'].field::-webkit-calendar-picker-indicator {
+    opacity: 0.55;
+    cursor: pointer;
+  }
+</style>

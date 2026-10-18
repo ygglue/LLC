@@ -1,35 +1,18 @@
 ---
+const items = ['Licensed & Insured', 'Background-Checked Staff', 'Satisfaction Guaranteed', 'Serving All of Orlando'];
 ---
 
-<section class="border-b border-line bg-bg" aria-label="Why trust us">
-  <div class="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8" data-reveal>
-    <ul class="grid grid-cols-2 gap-x-4 gap-y-5 lg:grid-cols-4">
-      <li class="flex items-center gap-3">
-        <svg class="h-7 w-7 shrink-0 text-accent" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-        </svg>
-        <span class="text-sm font-bold leading-tight text-ink sm:text-base">Licensed &amp; Insured</span>
-      </li>
-      <li class="flex items-center gap-3">
-        <svg class="h-7 w-7 shrink-0 text-accent" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <path d="M9 12l2 2 4-4" />
-          <circle cx="12" cy="12" r="10" />
-        </svg>
-        <span class="text-sm font-bold leading-tight text-ink sm:text-base">Background-Checked Staff</span>
-      </li>
-      <li class="flex items-center gap-3">
-        <svg class="h-7 w-7 shrink-0 text-accent" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
-        </svg>
-        <span class="text-sm font-bold leading-tight text-ink sm:text-base">Satisfaction Guaranteed</span>
-      </li>
-      <li class="flex items-center gap-3">
-        <svg class="h-7 w-7 shrink-0 text-accent" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z" />
-          <circle cx="12" cy="10" r="3" />
-        </svg>
-        <span class="text-sm font-bold leading-tight text-ink sm:text-base">Serving All of Orlando</span>
-      </li>
+<section class="border-y border-line bg-stone" aria-label="Why trust us">
+  <div class="container-lux py-8 md:py-10" data-reveal>
+    <ul class="grid grid-cols-2 gap-x-6 gap-y-5 text-center md:grid-cols-4 xl:flex xl:flex-nowrap xl:items-center xl:justify-center xl:gap-x-0">
+      {items.map((item, i) => (
+        <li class="t-eyebrow flex items-center justify-center text-ink xl:whitespace-nowrap">
+          {i > 0 && (
+            <span class="mx-7 hidden text-[0.5rem] text-champagne xl:inline" aria-hidden="true">◆</span>
+          )}
+          {item}
+        </li>
+      ))}
     </ul>
   </div>
 </section>

@@ -4,13 +4,23 @@ import '../styles/global.css';
 import Nav from '../components/Nav.astro';
 import Footer from '../components/Footer.astro';
 import PageHero from '../components/PageHero.astro';
-import Button from '../components/Button.astro';
+import SectionHeader from '../components/SectionHeader.astro';
 import ImageSlot from '../components/ImageSlot.astro';
 import CtaBand from '../components/CtaBand.astro';
 import { link } from '../lib/site';
 import { SERVICES, FLAGSHIP_SLUG as FLAG } from '../lib/services';
 
 const base = import.meta.env.BASE_URL;
+
+// Short labels for the sticky table of contents
+const TOC_LABELS: Record<string, string> = {
+  construction: 'Construction',
+  commercial: 'Commercial',
+  residential: 'Residential',
+  airbnb: 'Vacation Rental',
+  movein: 'Move-In / Out',
+  deep: 'Deep Cleaning',
+};
 ---
 
 <BaseLayout
@@ -25,77 +35,129 @@ const base = import.meta.env.BASE_URL;
     lead="Comprehensive cleaning solutions for every type of property. Construction-ready precision for every job."
   />
 
-  {SERVICES.map((service, i) => {
-    const flip = i % 2 === 1;
-    const isFlagship = service.slug === FLAG;
-    return (
-      <section id={service.slug} class:list={['scroll-mt-[calc(var(--nav-height)+1.5rem)]', i % 2 === 1 ? 'bg-bg-alt' : 'bg-white']}>
-        <div class="mx-auto max-w-7xl px-4 py-14 sm:px-6 sm:py-16 lg:px-8">
-          <div class="grid items-center gap-10 lg:grid-cols-2">
-            <div data-reveal class={flip ? 'lg:order-2' : ''}>
-              {isFlagship && (
-                <span class="text-xs font-bold uppercase tracking-[0.15em] text-accent">Flagship Service</span>
-              )}
-              <h2 class="mt-2 text-3xl font-bold tracking-tight text-ink sm:text-4xl">{service.title}</h2>
-              <p class="mt-4 text-lg leading-relaxed text-muted">{service.desc}</p>
-              <ul class="mt-6 space-y-3">
-                {service.bullets.map((b) => (
-                  <li class="flex items-start gap-3 text-ink">
-                    <svg class="mt-0.5 h-5 w-5 shrink-0 text-accent" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                      <polyline points="20 6 9 17 4 12" />
-                    </svg>
-                    <span>{b}</span>
-                  </li>
-                ))}
-              </ul>
-              <div class="mt-6">
-                <Button href={`${link('/quote/')}?service=${service.slug}`} variant="primary" size="sm">Get a Free Quote</Button>
+  <div data-services-wrap>
+    <nav
+      data-service-toc
+      aria-label="Services on this page"
+      class="sticky top-[var(--nav-height)] z-40 border-b border-line bg-ivory/95 backdrop-blur-md"
+    >
+      <div class="toc-scroller container-lux overflow-x-auto">
+        <ul class="flex h-14 w-max items-center gap-8 lg:w-full lg:justify-between lg:gap-6">
+          {SERVICES.map((service, i) => (
+            <li>
+              <a href={`#${service.slug}`} class="toc-link t-eyebrow inline-flex items-baseline gap-2.5 py-4 text-muted">
+                <span class="t-italic text-sm normal-case tracking-normal" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+                {TOC_LABELS[service.slug] ?? service.title}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </nav>
+
+    {SERVICES.map((service, i) => {
+      const flip = i % 2 === 1;
+      const onStone = flip;
+      const isFlagship = service.slug === FLAG;
+      return (
+        <section
+          id={service.slug}
+          tabindex="-1"
+          class:list={['scroll-mt-[calc(var(--nav-height)+3.5rem+1px)] outline-none', onStone ? 'bg-stone' : 'bg-ivory']}
+        >
+          <div class="container-lux py-24 md:py-32">
+            <div class="grid items-center gap-14 lg:grid-cols-12 lg:gap-16">
+              <div data-reveal class:list={['lg:row-start-1 lg:col-span-6', flip ? 'lg:col-start-7' : 'lg:col-start-1']}>
+                <p class="flex items-baseline gap-4">
+                  <span class:list={['t-italic text-2xl leading-none', onStone ? 'text-gold-deep' : 'text-gold']} aria-hidden="true">
+                    {String(i + 1).padStart(2, '0')}
+                  </span>
+                  {isFlagship && <span class:list={['t-eyebrow', onStone && 'text-gold-deep']}>Signature Service</span>}
+                </p>
+                <h2 class="t-h2 mt-6 text-ink">{service.title}</h2>
+                <p class="mt-6 max-w-xl text-[1.0625rem] text-muted">{service.desc}</p>
+                <ul class="mt-10 max-w-xl border-t border-line">
+                  {service.bullets.map((b) => (
+                    <li class="flex gap-4 border-b border-line py-4 text-ink">
+                      <span class="text-champagne" aria-hidden="true">–</span>
+                      <span>{b}</span>
+                    </li>
+                  ))}
+                </ul>
+                <a
+                  href={`${link('/quote/')}?service=${service.slug}`}
+                  class:list={['link-lux mt-10', onStone && 'text-gold-deep']}
+                >
+                  Request a quote <span aria-hidden="true">→</span>
+                </a>
+              </div>
+              <div data-reveal class:list={['lg:row-start-1 lg:col-span-5', flip ? 'lg:col-start-1' : 'lg:col-start-8']}>
+                <div class="mx-auto w-full max-w-md lg:max-w-none">
+                  <ImageSlot
+                    slotId={`${service.slug}-main`}
+                    src={`${base}${service.image}`}
+                    alt={service.imageAlt}
+                    aspect="4/5"
+                    frame
+                    eager={i === 0}
+                    sizes="(min-width: 1320px) 460px, (min-width: 1024px) 35vw, (min-width: 768px) 448px, calc(100vw - 48px)"
+                  />
+                </div>
               </div>
             </div>
-            <div data-reveal={flip ? 'left' : 'right'} class={flip ? 'lg:order-1' : ''}>
-              <ImageSlot
-                slotId={`${service.slug}-main`}
-                src={`${base}${service.image}`}
-                alt={service.imageAlt}
-                aspect="4/3"
-                eager={i === 0}
-                sizes="(min-width: 1280px) 600px, (min-width: 1024px) calc(50vw - 52px), (min-width: 640px) calc(100vw - 48px), calc(100vw - 32px)"
-              />
-            </div>
           </div>
-        </div>
-      </section>
-    );
-  })}
+        </section>
+      );
+    })}
+  </div>
 
-  <section class="bg-white">
-    <div class="mx-auto max-w-4xl px-4 py-14 sm:px-6 sm:py-16">
-      <div data-reveal>
-        <h2 class="text-center text-3xl font-bold tracking-tight text-ink sm:text-4xl">Frequently Asked Questions</h2>
-        <p class="mt-3 text-center text-lg text-muted">Quick answers before you request a quote.</p>
-      </div>
-      <div class="mt-8 flex flex-col gap-4" data-reveal>
-        <details class="rounded-xl border border-line bg-white p-5 shadow-sm">
-          <summary class="cursor-pointer font-bold text-ink">What factors affect pricing?</summary>
-          <p class="mt-3 leading-relaxed text-muted">Property size and square footage, service type, condition of the space, frequency (one-time vs. recurring), and timeline. Every quote is itemized so you know exactly what you're paying for.</p>
-        </details>
-        <details class="rounded-xl border border-line bg-white p-5 shadow-sm">
-          <summary class="cursor-pointer font-bold text-ink">Do you bring your own supplies and equipment?</summary>
-          <p class="mt-3 leading-relaxed text-muted">Yes. We arrive fully equipped with professional-grade supplies and equipment for every job, including construction-grade vacuums, detailing tools, and eco-friendly products on request.</p>
-        </details>
-        <details class="rounded-xl border border-line bg-white p-5 shadow-sm">
-          <summary class="cursor-pointer font-bold text-ink">What if something is missed — do you offer re-cleans?</summary>
-          <p class="mt-3 leading-relaxed text-muted">Absolutely. If anything on the agreed scope or punch list isn't right, tell us within 48 hours and we'll come back and make it right at no charge.</p>
-        </details>
-        <details class="rounded-xl border border-line bg-white p-5 shadow-sm">
-          <summary class="cursor-pointer font-bold text-ink">Can you provide a COI for general contractors?</summary>
-          <p class="mt-3 leading-relaxed text-muted">Yes. We're licensed and insured and can provide a certificate of insurance (COI) naming your company or project as additionally insured on request.</p>
-        </details>
+  <section class="bg-ivory">
+    <div class="container-lux py-24 md:py-32 lg:py-40">
+      <div class="grid gap-12 lg:grid-cols-12 lg:gap-16">
+        <div class="lg:col-span-4">
+          <SectionHeader
+            align="left"
+            eyebrow="Questions"
+            title="Frequently Asked Questions"
+            lead="Quick answers before you request a quote."
+          />
+        </div>
+        <div class="border-t border-line lg:col-span-7 lg:col-start-6" data-reveal>
+          <details class="faq group border-b border-line">
+            <summary class="flex cursor-pointer items-center justify-between gap-6 py-7 md:py-8">
+              <span class="t-h3 text-[1.375rem] text-ink md:text-[1.75rem]">What factors affect pricing?</span>
+              <span class="faq-icon" aria-hidden="true"></span>
+            </summary>
+            <p class="max-w-2xl pb-8 pr-12 text-muted">Property size and square footage, service type, condition of the space, frequency (one-time vs. recurring), and timeline. Every quote is itemized so you know exactly what you're paying for.</p>
+          </details>
+          <details class="faq group border-b border-line">
+            <summary class="flex cursor-pointer items-center justify-between gap-6 py-7 md:py-8">
+              <span class="t-h3 text-[1.375rem] text-ink md:text-[1.75rem]">Do you bring your own supplies and equipment?</span>
+              <span class="faq-icon" aria-hidden="true"></span>
+            </summary>
+            <p class="max-w-2xl pb-8 pr-12 text-muted">Yes. We arrive fully equipped with professional-grade supplies and equipment for every job, including construction-grade vacuums, detailing tools, and eco-friendly products on request.</p>
+          </details>
+          <details class="faq group border-b border-line">
+            <summary class="flex cursor-pointer items-center justify-between gap-6 py-7 md:py-8">
+              <span class="t-h3 text-[1.375rem] text-ink md:text-[1.75rem]">What if something is missed — do you offer re-cleans?</span>
+              <span class="faq-icon" aria-hidden="true"></span>
+            </summary>
+            <p class="max-w-2xl pb-8 pr-12 text-muted">Absolutely. If anything on the agreed scope or punch list isn't right, tell us within 48 hours and we'll come back and make it right at no charge.</p>
+          </details>
+          <details class="faq group border-b border-line">
+            <summary class="flex cursor-pointer items-center justify-between gap-6 py-7 md:py-8">
+              <span class="t-h3 text-[1.375rem] text-ink md:text-[1.75rem]">Can you provide a COI for general contractors?</span>
+              <span class="faq-icon" aria-hidden="true"></span>
+            </summary>
+            <p class="max-w-2xl pb-8 pr-12 text-muted">Yes. We're licensed and insured and can provide a certificate of insurance (COI) naming your company or project as additionally insured on request.</p>
+          </details>
+        </div>
       </div>
     </div>
   </section>
 
   <CtaBand
+    tone="stone"
     title="Not Sure Which Service You Need?"
     primaryHref={link('/quote/')}
     primaryLabel="Get a Free Quote"
@@ -105,3 +167,181 @@ const base = import.meta.env.BASE_URL;
 
   <Footer slot="footer" />
 </BaseLayout>
+
+<script>
+  // Sticky services TOC: in-page links land the section just below header + TOC
+  // (Lenis' anchor offset only knows about the header), and the current section
+  // is marked aria-current. Re-inits per page for the ClientRouter.
+  let teardown: (() => void) | null = null;
+
+  function initServicesToc() {
+    teardown?.();
+    teardown = null;
+    const toc = document.querySelector<HTMLElement>('[data-service-toc]');
+    if (!toc) return;
+    const scroller = toc.querySelector<HTMLElement>('.toc-scroller');
+    const links = Array.from(toc.querySelectorAll<HTMLAnchorElement>('a[href^="#"]'));
+    const byId = new Map<string, HTMLAnchorElement>();
+    const sections: HTMLElement[] = [];
+    links.forEach((a) => {
+      const id = decodeURIComponent(a.hash.slice(1));
+      const el = document.getElementById(id);
+      if (el) {
+        byId.set(id, a);
+        sections.push(el);
+      }
+    });
+    const ac = new AbortController();
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const navH = () =>
+      parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--nav-height')) || 88;
+    const clearance = () => navH() + toc.offsetHeight;
+
+    // Capture on document: runs before Lenis (window) and the router, so we own the scroll.
+    document.addEventListener(
+      'click',
+      (e) => {
+        if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+        const a = (e.target as Element | null)?.closest?.('a[href*="#"]') as HTMLAnchorElement | null;
+        if (!a) return;
+        const url = new URL(a.href, location.href);
+        if (url.origin !== location.origin || url.pathname !== location.pathname) return;
+        const el = document.getElementById(decodeURIComponent(url.hash.slice(1)));
+        if (!el || !sections.includes(el)) return;
+        e.preventDefault();
+        e.stopPropagation();
+        const top = el.getBoundingClientRect().top + window.scrollY - clearance();
+        window.scrollTo({ top: Math.max(0, Math.round(top)), behavior: reduce.matches ? 'auto' : 'smooth' });
+        history.replaceState(history.state, '', url.hash);
+        el.focus({ preventScroll: true });
+      },
+      { capture: true, signal: ac.signal },
+    );
+
+    const setActive = (id: string | null) => {
+      links.forEach((a) => a.removeAttribute('aria-current'));
+      const a = id ? byId.get(id) : undefined;
+      if (!a) return;
+      a.setAttribute('aria-current', 'true');
+      if (scroller && scroller.scrollWidth > scroller.clientWidth) {
+        const li = a.offsetLeft;
+        const ri = li + a.offsetWidth;
+        if (li < scroller.scrollLeft + 24 || ri > scroller.scrollLeft + scroller.clientWidth - 24) {
+          scroller.scrollTo({ left: li - 24, behavior: reduce.matches ? 'auto' : 'smooth' });
+        }
+      }
+    };
+
+    // Active section = the last one whose top has passed the TOC's bottom edge.
+    let raf = 0;
+    const update = () => {
+      raf = 0;
+      const line = clearance() + 8;
+      let current: string | null = null;
+      for (const s of sections) {
+        if (s.getBoundingClientRect().top <= line) current = s.id;
+      }
+      const last = sections[sections.length - 1];
+      if (last && last.getBoundingClientRect().bottom <= line) current = null;
+      setActive(current);
+    };
+    const onScroll = () => {
+      if (!raf) raf = requestAnimationFrame(update);
+    };
+    window.addEventListener('scroll', onScroll, { passive: true, signal: ac.signal });
+    window.addEventListener('resize', onScroll, { signal: ac.signal });
+    update();
+
+    teardown = () => {
+      ac.abort();
+      cancelAnimationFrame(raf);
+    };
+  }
+
+  document.addEventListener('astro:page-load', initServicesToc);
+  document.addEventListener('astro:before-swap', () => {
+    teardown?.();
+    teardown = null;
+  });
+</script>
+
+<style>
+  .toc-scroller {
+    scrollbar-width: none;
+  }
+  .toc-scroller::-webkit-scrollbar {
+    display: none;
+  }
+  @media (max-width: 1023px) {
+    .toc-scroller {
+      mask-image: linear-gradient(to right, #000 calc(100% - 2.5rem), transparent);
+    }
+  }
+  .toc-link {
+    position: relative;
+    transition: color var(--dur-base) var(--ease-lux);
+  }
+  .toc-link::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 1px;
+    background: var(--color-ink);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform var(--dur-base) var(--ease-lux);
+  }
+  .toc-link:hover,
+  .toc-link[aria-current="true"] {
+    color: var(--color-ink);
+  }
+  .toc-link[aria-current="true"]::after {
+    transform: scaleX(1);
+  }
+
+  /* Sections take programmatic focus after a TOC jump; no ring on the whole block */
+  [data-services-wrap] > section:focus,
+  [data-services-wrap] > section:focus-visible {
+    outline: none;
+  }
+
+  /* FAQ: native details, CSS plus that turns into a minus */
+  .faq summary {
+    list-style: none;
+  }
+  .faq summary::-webkit-details-marker {
+    display: none;
+  }
+  .faq-icon {
+    position: relative;
+    flex: none;
+    width: 1.25rem;
+    height: 1.25rem;
+  }
+  .faq-icon::before,
+  .faq-icon::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 0;
+    width: 100%;
+    height: 1px;
+    background: var(--color-ink);
+    transition:
+      transform var(--dur-base) var(--ease-lux),
+      opacity var(--dur-base) var(--ease-lux);
+  }
+  .faq-icon::after {
+    transform: rotate(90deg);
+  }
+  .faq[open] .faq-icon::after {
+    transform: rotate(0deg);
+    opacity: 0;
+  }
+  .faq summary:hover .faq-icon::before,
+  .faq summary:hover .faq-icon::after {
+    background: var(--color-gold);
+  }
+</style>

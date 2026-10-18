@@ -26,69 +26,79 @@ const contactLinks = [
 ---
 
 <header id="site-header" class="site-header sticky top-0 z-50">
-  <nav class="mx-auto flex h-[var(--nav-height)] max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8" aria-label="Main navigation">
-    <div id="site-logo" class="site-logo ml-4 sm:ml-6">
+  <nav class="container-lux flex h-[var(--nav-height)] items-center justify-between gap-6" aria-label="Main navigation">
+    <div id="site-logo" class="site-logo">
       <Logo />
     </div>
 
-    <button
-      id="menu-btn"
-      type="button"
-      class="menu-bubble-btn relative z-50 mt-6 flex h-16 w-16 shrink-0 items-center justify-center rounded-full border border-ink/20 bg-[#ece2cf] shadow-[0_10px_28px_rgba(38,41,46,0.25),inset_0_3px_8px_rgba(255,255,255,0.9),inset_0_-6px_12px_rgba(38,41,46,0.18)] transition-transform hover:scale-105 sm:h-20 sm:w-20"
-      aria-label="Open menu"
-      aria-expanded="false"
-      aria-controls="menu-overlay"
-    >
-      <span class="relative block h-4 w-8" aria-hidden="true">
-        <span class="menu-line absolute left-0 top-0 block h-0.5 w-full bg-ink transition-all duration-300"></span>
-        <span class="menu-line absolute bottom-0 left-0 block h-0.5 w-full bg-ink transition-all duration-300"></span>
-      </span>
-    </button>
+    <div class="flex items-center gap-8 lg:gap-12">
+      <a id="header-cta" href={quoteLink.href} class="header-cta link-lux-ink hidden md:inline-flex">Request a Quote</a>
+
+      <button
+        id="menu-btn"
+        type="button"
+        class="menu-btn relative z-50 -mr-2 inline-flex min-h-11 items-center gap-4 px-2"
+        aria-label="Open menu"
+        aria-expanded="false"
+        aria-controls="menu-overlay"
+      >
+        <span class="menu-btn-text" aria-hidden="true">
+          <span class="menu-btn-word" data-word="menu">Menu</span>
+          <span class="menu-btn-word" data-word="close">Close</span>
+        </span>
+        <span class="menu-lines" aria-hidden="true">
+          <span class="menu-line"></span>
+          <span class="menu-line"></span>
+        </span>
+      </button>
+    </div>
   </nav>
 </header>
 
 <div
   id="menu-overlay"
   data-lenis-prevent
-  class="fixed inset-0 z-40 flex flex-col overflow-y-auto bg-footer text-white"
+  class="fixed inset-0 z-40 flex flex-col overflow-y-auto bg-ink text-on-dark"
   role="dialog"
   aria-modal="true"
   aria-label="Site menu"
   data-dark
   hidden
 >
-  <div id="menu-bubbles" class="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true"></div>
-  <nav class="relative mx-auto my-auto w-full max-w-7xl px-6 py-24 sm:px-10" aria-label="Fullscreen menu">
-    <ul class="flex flex-col gap-1 sm:gap-2">
+  <nav class="container-lux my-auto pb-16 pt-[calc(var(--nav-height)+3rem)]" aria-label="Fullscreen menu">
+    <ul class="flex flex-col">
       {links.map((l, i) => (
-        <li class="menu-item" style={`--d:${120 + i * 80}ms`}>
+        <li class="menu-item" style={`--d:${150 + i * 90}ms`}>
           <a
             href={link(l.path)}
             aria-current={isActive(l.path) ? 'page' : undefined}
-            class={`inline-flex text-4xl font-bold tracking-tight transition-colors hover:text-silver sm:text-7xl ${isActive(l.path) ? 'text-star' : ''}`}
+            class="menu-link group inline-flex items-baseline gap-5 py-1 sm:gap-8"
           >
-            <span class="menu-link-label">{l.label}</span>
+            <span class="menu-num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+            <span class="menu-label">{l.label}</span>
           </a>
         </li>
       ))}
     </ul>
-    <div class="mt-10 flex flex-col items-start gap-4 sm:mt-14 sm:flex-row sm:flex-wrap sm:items-center sm:gap-x-8">
-      <div class="menu-item" style="--d:440ms">
-        <Button href={quoteLink.href} variant="light" size="lg">{quoteLink.label}</Button>
+
+    <div class="menu-item mt-12 sm:mt-16" style="--d:540ms">
+      <hr class="hairline" />
+      <div class="mt-10 flex flex-col items-start gap-8 md:flex-row md:items-center md:justify-between">
+        <Button href={quoteLink.href} variant="light">{quoteLink.label}</Button>
+        <ul class="flex flex-col gap-2 sm:flex-row sm:gap-x-10">
+          {contactLinks.map((l) => (
+            <li>
+              <a
+                href={l.href}
+                aria-label={`${l.kind}: ${l.label}`}
+                class="inline-flex min-h-11 items-center text-[0.9375rem] tracking-[0.02em] text-on-dark-muted transition-colors duration-[600ms] hover:text-on-dark"
+              >
+                {l.label}
+              </a>
+            </li>
+          ))}
+        </ul>
       </div>
-      <ul class="flex flex-col gap-1 sm:flex-row sm:gap-x-8">
-        {contactLinks.map((l, i) => (
-          <li class="menu-item" style={`--d:${520 + i * 80}ms`}>
-            <a
-              href={l.href}
-              aria-label={`${l.kind}: ${l.label}`}
-              class="inline-flex min-h-11 items-center text-lg font-semibold text-white/85 underline-offset-4 transition-colors hover:text-white hover:underline"
-            >
-              {l.label}
-            </a>
-          </li>
-        ))}
-      </ul>
     </div>
   </nav>
 </div>
@@ -99,7 +109,7 @@ const contactLinks = [
   if (!window.__menuNavInit) {
     window.__menuNavInit = true;
 
-    const CLOSE_MS = 550;
+    const CLOSE_MS = 600;
     const getBtn = () => document.getElementById('menu-btn');
     const getOverlay = () => document.getElementById('menu-overlay');
     const getHeader = () => document.getElementById('site-header');
@@ -126,7 +136,7 @@ const contactLinks = [
 
     // ---- Modal helpers ----
     function setBackgroundInert(on) {
-      document.querySelectorAll('#main, footer, #site-logo').forEach((el) => {
+      document.querySelectorAll('#main, footer, #site-logo, #header-cta').forEach((el) => {
         if (on) el.setAttribute('inert', '');
         else el.removeAttribute('inert');
       });
@@ -136,14 +146,6 @@ const contactLinks = [
       const links = overlay ? Array.from(overlay.querySelectorAll('a[href]')) : [];
       const btn = getBtn();
       return btn ? [btn, ...links] : links;
-    }
-    function setOriginFromButton() {
-      const btn = getBtn();
-      const overlay = getOverlay();
-      if (!btn || !overlay) return;
-      const r = btn.getBoundingClientRect();
-      overlay.style.setProperty('--menu-x', `${r.left + r.width / 2}px`);
-      overlay.style.setProperty('--menu-y', `${r.top + r.height / 2}px`);
     }
 
     function setOpen(open, { returnFocus = true } = {}) {
@@ -160,7 +162,6 @@ const contactLinks = [
         hideTimer = null;
       }
       if (open) {
-        setOriginFromButton();
         overlay.removeAttribute('hidden');
         document.documentElement.classList.add('menu-scroll-lock');
         setBackgroundInert(true);
@@ -170,12 +171,10 @@ const contactLinks = [
             overlay.querySelector('a[href]')?.focus({ preventScroll: true });
           })
         );
-        startBubbles();
       } else {
         overlay.classList.remove('open');
         document.documentElement.classList.remove('menu-scroll-lock');
         setBackgroundInert(false);
-        stopBubbles();
         if (returnFocus) btn.focus({ preventScroll: true });
         hideTimer = setTimeout(() => {
           hideTimer = null;
@@ -185,80 +184,10 @@ const contactLinks = [
       }
     }
 
-    // ---- Floating bubbles inside the overlay ----
-    let bubbleTimer = null;
-    function stopBubbles() {
-      if (bubbleTimer) {
-        clearInterval(bubbleTimer);
-        bubbleTimer = null;
-      }
-      getOverlay()?.querySelector('#menu-bubbles')?.replaceChildren();
-    }
-    function popBubbleEl(b) {
-      if (!b || b.dataset.popped) return;
-      b.dataset.popped = '1';
-      const r = b.getBoundingClientRect();
-      b.style.position = 'fixed';
-      b.style.left = `${r.left}px`;
-      b.style.top = `${r.top}px`;
-      b.style.bottom = 'auto';
-      b.style.animation = 'none';
-      void b.offsetWidth;
-      b.style.animation = '';
-      b.classList.add('popped');
-      b.addEventListener('animationend', () => b.remove(), { once: true });
-      setTimeout(() => b.remove(), 400);
-    }
-    function startBubbles() {
-      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-      stopBubbles();
-      const layer = getOverlay()?.querySelector('#menu-bubbles');
-      if (!layer) return;
-      const spawn = () => {
-        if (layer.childElementCount >= 24) return;
-        const b = document.createElement('span');
-        b.className = 'menu-float-bubble';
-        const size = 8 + Math.random() * 34;
-        const dur = 6 + Math.random() * 6;
-        b.style.width = `${size}px`;
-        b.style.height = `${size}px`;
-        b.style.left = `${Math.random() * 100}%`;
-        b.style.animationDuration = `${dur}s`;
-        b.addEventListener('pointerenter', () => popBubbleEl(b));
-        b.addEventListener('click', () => popBubbleEl(b));
-        b.addEventListener('animationend', () => {
-          if (!b.dataset.popped) b.remove();
-        });
-        // Fallback: never leave orphans if animationend doesn't fire.
-        setTimeout(() => b.remove(), dur * 1000 + 1000);
-        layer.appendChild(b);
-      };
-      spawn();
-      spawn();
-      bubbleTimer = setInterval(spawn, 550);
-    }
-
-    // ---- Click ripple from the menu button ----
-    function popBubble(btn) {
-      const rect = btn.getBoundingClientRect();
-      const bubble = document.createElement('span');
-      bubble.className = 'menu-btn-burst';
-      const size = Math.max(rect.width, rect.height) * 2.6;
-      bubble.style.width = `${size}px`;
-      bubble.style.height = `${size}px`;
-      bubble.style.left = `${rect.left + rect.width / 2}px`;
-      bubble.style.top = `${rect.top + rect.height / 2}px`;
-      document.body.appendChild(bubble);
-      bubble.addEventListener('animationend', () => bubble.remove(), { once: true });
-      setTimeout(() => bubble.remove(), 900);
-    }
-
     document.addEventListener('click', (e) => {
       const target = e.target instanceof Element ? e.target : null;
       if (!target) return;
-      const btn = target.closest('#menu-btn');
-      if (btn) {
-        popBubble(btn);
+      if (target.closest('#menu-btn')) {
         setOpen(!isOpen());
         return;
       }
@@ -288,7 +217,6 @@ const contactLinks = [
         clearTimeout(hideTimer);
         hideTimer = null;
       }
-      stopBubbles();
       document.documentElement.classList.remove('menu-scroll-lock');
       setBackgroundInert(false);
       getHeader()?.removeAttribute('data-menu-open');
@@ -315,86 +243,28 @@ const contactLinks = [
 </script>
 
 <style is:global>
-  /* Global: these nodes are created in JS, so scoped selectors never match. */
   html {
     scrollbar-gutter: stable;
   }
   html.menu-scroll-lock {
     overflow: hidden;
   }
-  #menu-bubbles .menu-float-bubble {
-    position: absolute;
-    bottom: -70px;
-    border-radius: 9999px;
-    background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.06) 62%);
-    border: 1px solid rgba(255, 255, 255, 0.28);
-    pointer-events: auto;
-    cursor: pointer;
-    animation-name: menu-bubble-rise;
-    animation-timing-function: linear;
-    animation-fill-mode: forwards;
-  }
-  @keyframes menu-bubble-rise {
-    to {
-      transform: translateY(-115vh);
-    }
-  }
-  #menu-bubbles .menu-float-bubble.popped {
-    animation: menu-bubble-pop 0.22s ease-out forwards;
-  }
-  @keyframes menu-bubble-pop {
-    to {
-      transform: scale(1.9);
-      opacity: 0;
-    }
-  }
-  .menu-btn-burst {
-    position: fixed;
-    z-index: 60;
-    border-radius: 9999px;
-    background: var(--color-accent);
-    opacity: 0.35;
-    transform: translate(-50%, -50%) scale(0);
-    pointer-events: none;
-    animation: menu-btn-burst 0.7s ease-out forwards;
-  }
-  @keyframes menu-btn-burst {
-    to {
-      transform: translate(-50%, -50%) scale(1);
-      opacity: 0;
-    }
-  }
-  @media (prefers-reduced-motion: reduce) {
-    #menu-bubbles .menu-float-bubble,
-    .menu-btn-burst {
-      animation: none !important;
-      display: none;
-    }
-  }
 </style>
 
 <style>
-  /* ---- Sticky header ---- */
+  /* ---- Sticky header: transparent at top, frosted ivory once scrolled ---- */
   .site-header {
     transition:
-      background-color 0.3s ease,
-      box-shadow 0.3s ease,
-      backdrop-filter 0.3s ease;
+      background-color var(--dur-base) var(--ease-lux),
+      box-shadow var(--dur-base) var(--ease-lux);
   }
   .site-header[data-scrolled]:not([data-menu-open]) {
-    background-color: rgb(247 242 231 / 0.88);
-    -webkit-backdrop-filter: blur(10px);
-    backdrop-filter: blur(10px);
-    box-shadow: 0 1px 0 rgb(38 41 46 / 0.08), 0 8px 24px -12px rgb(38 41 46 / 0.25);
-  }
-  /* Pull the (overhanging) menu button into the bar once scrolled. */
-  #menu-btn {
-    transition:
-      transform 0.3s cubic-bezier(0.16, 1, 0.3, 1),
-      scale 0.15s ease;
-  }
-  .site-header[data-scrolled] #menu-btn {
-    transform: translateY(-12px) scale(0.85);
+    background-color: rgb(247 243 236 / 0.92);
+    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(12px);
+    box-shadow:
+      inset 0 -1px 0 var(--color-line),
+      var(--shadow-soft);
   }
   /* While the menu is open the overlay sits under the header: let it show. */
   .site-header[data-menu-open] {
@@ -403,108 +273,101 @@ const contactLinks = [
   .site-header[data-menu-open] #menu-btn {
     pointer-events: auto;
   }
-  .site-logo {
-    transition: opacity 0.3s ease;
+  .site-logo,
+  .header-cta {
+    transition: opacity var(--dur-base) var(--ease-lux);
   }
-  .site-header[data-menu-open] .site-logo {
+  .site-header[data-menu-open] .site-logo,
+  .site-header[data-menu-open] .header-cta {
     opacity: 0;
   }
 
+  /* ---- Menu button: a word and two hairlines that cross into an X ---- */
+  .menu-btn {
+    font-family: var(--font-sans);
+    font-weight: 500;
+    font-size: 0.75rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--color-ink);
+    transition: color var(--dur-base) var(--ease-lux);
+  }
+  .site-header[data-menu-open] .menu-btn {
+    color: var(--color-on-dark);
+  }
+  .site-header[data-menu-open] .menu-btn:focus-visible {
+    outline-color: var(--color-champagne);
+  }
+  .menu-btn-text {
+    display: inline-grid;
+    text-align: right;
+  }
+  .menu-btn-word {
+    grid-area: 1 / 1;
+    transition: opacity var(--dur-fast) var(--ease-lux);
+  }
+  .menu-btn-word[data-word="close"],
+  #menu-btn[data-open="true"] .menu-btn-word[data-word="menu"] {
+    opacity: 0;
+  }
+  #menu-btn[data-open="true"] .menu-btn-word[data-word="close"] {
+    opacity: 1;
+  }
+  .menu-lines {
+    position: relative;
+    display: block;
+    width: 24px;
+    height: 7px;
+  }
+  .menu-line {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    height: 1px;
+    background: currentColor;
+    transition:
+      transform var(--dur-base) var(--ease-lux),
+      top var(--dur-base) var(--ease-lux);
+  }
+  .menu-line:first-child {
+    top: 0;
+  }
+  .menu-line:last-child {
+    top: 6px;
+  }
+  #menu-btn[data-open="true"] .menu-line:first-child {
+    top: 3px;
+    transform: rotate(45deg);
+  }
+  #menu-btn[data-open="true"] .menu-line:last-child {
+    top: 3px;
+    transform: rotate(-45deg);
+  }
+
+  /* ---- Overlay: a slow ink fade ---- */
   #menu-overlay[hidden] {
     display: none;
   }
-  #menu-overlay .menu-link-label {
-    display: inline-block;
-    overflow: hidden;
-    position: relative;
-    padding-bottom: 6px;
-  }
-  #menu-overlay .menu-link-label::after {
-    content: "";
-    position: absolute;
-    left: 0;
-    bottom: 0;
-    height: 3px;
-    width: 100%;
-    background: currentColor;
-    transform: translateX(-101%);
-  }
-  #menu-overlay a:hover .menu-link-label::after {
-    animation: underline-travel 1s linear infinite;
-  }
-  @keyframes underline-travel {
-    from {
-      transform: translateX(-101%);
-    }
-    to {
-      transform: translateX(101%);
-    }
-  }
-  .menu-bubble-btn::before {
-    content: "";
-    position: absolute;
-    left: 18%;
-    top: 12%;
-    width: 34%;
-    height: 22%;
-    border-radius: 9999px;
-    background: linear-gradient(to bottom, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0));
-    transform: rotate(-18deg);
-    pointer-events: none;
-  }
-  #menu-btn[data-open="true"] {
-    border-color: rgba(38, 41, 46, 0.35);
-  }
-  #menu-btn[data-open="true"] .menu-line:first-child {
-    top: 50%;
-    transform: translateY(-50%) rotate(45deg);
-  }
-  #menu-btn[data-open="true"] .menu-line:last-child {
-    bottom: auto;
-    top: 50%;
-    transform: translateY(-50%) rotate(-45deg);
-  }
-
-  /* ---- Overlay reveal: circle grows from the menu button ---- */
   #menu-overlay {
-    /* Fallbacks match the button centre; JS sets exact values on open. */
-    --menu-x: calc(100% - 3rem);
-    --menu-y: 3rem;
-    clip-path: circle(0px at var(--menu-x) var(--menu-y));
+    opacity: 0;
     visibility: hidden;
     transition:
-      clip-path 0.55s cubic-bezier(0.16, 1, 0.3, 1),
-      visibility 0s linear 0.55s;
-  }
-  @media (min-width: 640px) {
-    #menu-overlay {
-      --menu-x: calc(100% - 4rem);
-    }
-  }
-  @media (min-width: 1024px) {
-    #menu-overlay {
-      --menu-x: calc(100% - 4.5rem);
-    }
-  }
-  @media (min-width: 1280px) {
-    #menu-overlay {
-      /* Button is pinned to the right edge of the 80rem container. */
-      --menu-x: calc(50% + 40rem - 4.5rem);
-    }
+      opacity var(--dur-base) var(--ease-lux),
+      visibility 0s linear var(--dur-base);
   }
   #menu-overlay.open {
-    clip-path: circle(150% at var(--menu-x) var(--menu-y));
+    opacity: 1;
     visibility: visible;
     transition:
-      clip-path 0.55s cubic-bezier(0.16, 1, 0.3, 1),
+      opacity var(--dur-base) var(--ease-lux),
       visibility 0s linear 0s;
   }
   #menu-overlay .menu-item {
     opacity: 0;
-    transform: translateY(1.75rem);
+    transform: translateY(12px);
     transition:
-      opacity 0.45s cubic-bezier(0.16, 1, 0.3, 1),
-      transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+      opacity var(--dur-base) var(--ease-lux),
+      transform var(--dur-base) var(--ease-lux);
     transition-delay: 0ms;
   }
   #menu-overlay.open .menu-item {
@@ -512,15 +375,54 @@ const contactLinks = [
     transform: none;
     transition-delay: var(--d, 0ms);
   }
+
+  .menu-link {
+    color: var(--color-on-dark);
+    text-decoration: none;
+  }
+  .menu-num {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-size: 1.25rem;
+    line-height: 1;
+    color: var(--color-champagne);
+    min-width: 1.75rem;
+  }
+  .menu-label {
+    display: inline-block;
+    font-family: var(--font-serif);
+    font-weight: 300;
+    font-size: clamp(2.5rem, 7vw, 5rem);
+    line-height: 1.12;
+    transition:
+      color var(--dur-base) var(--ease-lux),
+      transform var(--dur-base) var(--ease-lux);
+  }
+  .menu-link:hover .menu-label,
+  .menu-link:focus-visible .menu-label {
+    color: var(--color-champagne);
+  }
+  .menu-link:hover .menu-label {
+    transform: translateX(0.5rem);
+  }
+  .menu-link[aria-current="page"] .menu-label {
+    font-style: italic;
+    font-weight: 400;
+    color: var(--color-champagne);
+  }
+
   @media (prefers-reduced-motion: reduce) {
     .site-header,
-    #menu-btn,
+    .menu-btn,
+    .menu-line,
+    .menu-btn-word,
+    .menu-label,
     #menu-overlay,
-    #menu-overlay .menu-item,
-    #menu-overlay .menu-link-label::after,
-    #menu-btn .menu-line {
+    #menu-overlay .menu-item {
       transition: none !important;
-      animation: none !important;
+    }
+    .menu-link:hover .menu-label {
+      transform: none;
     }
   }
 </style>

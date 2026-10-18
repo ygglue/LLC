@@ -4,6 +4,8 @@ import '../styles/global.css';
 import Nav from '../components/Nav.astro';
 import Footer from '../components/Footer.astro';
 import Hero from '../components/Hero.astro';
+import ServicesCarousel from '../components/ServicesCarousel.astro';
+import SectionHeader from '../components/SectionHeader.astro';
 import TrustBar from '../components/TrustBar.astro';
 import ValueProp from '../components/ValueProp.astro';
 import TestimonialsCarousel from '../components/TestimonialsCarousel.astro';
@@ -15,7 +17,6 @@ import { Picture } from 'astro:assets';
 import whyUs from '../assets/images/why-us.jpg';
 import { widthSet, PICTURE_FORMATS } from '../lib/images';
 
-const base = import.meta.env.BASE_URL;
 
 const cities = [
   'Orlando',
@@ -47,88 +48,96 @@ const cities = [
 
   <TrustBar />
 
-  <!-- Why Choose Us -->
-  <section id="why-us" class="bg-bg-alt" aria-labelledby="why-us-title">
-    <div class="mx-auto max-w-7xl px-4 py-20 sm:px-6 sm:py-24 lg:px-8" data-reveal>
-      <div class="grid items-center gap-10 lg:grid-cols-[1fr_1.1fr] lg:gap-16">
-        <figure class="overflow-hidden rounded-2xl border border-line/60 shadow-sm">
-          <Picture
-            src={whyUs}
-            alt="Two-person Luxury Duo Cleaning crew wiping down a table in Orlando FL"
-            formats={[...PICTURE_FORMATS]}
-            fallbackFormat="jpg"
-            widths={widthSet(whyUs, [400])}
-            sizes="(min-width: 1280px) 560px, (min-width: 1024px) 45vw, (min-width: 640px) calc(100vw - 48px), calc(100vw - 32px)"
-            loading="lazy"
-            decoding="async"
-            class="aspect-[4/3] w-full object-cover lg:aspect-[4/5]"
-            pictureAttributes={{ class: 'contents' }}
-          />
-        </figure>
+  <!-- The Services -->
+  <section id="services" class="bg-ivory py-24 md:py-32 lg:py-40" aria-label="The services">
+    <div class="container-lux">
+      <SectionHeader
+        align="left"
+        number="01"
+        eyebrow="The Services"
+        title="One standard, six ways."
+        lead="From the jobsite walkthrough to the guest who arrives tonight — every clean, finished with the same exacting care."
+      />
+    </div>
+    <div class="mt-16 md:mt-20" data-reveal>
+      <ServicesCarousel />
+    </div>
+  </section>
 
-        <div>
-          <span class="text-xs font-bold uppercase tracking-[0.2em] text-ink">Why Luxury Duo</span>
-          <h2 id="why-us-title" class="mt-2 text-3xl font-bold tracking-tight text-ink sm:text-5xl">
-            Why Choose Luxury Duo
-          </h2>
-          <p class="mt-4 max-w-xl text-lg leading-relaxed text-ink">
-            We don't just clean spaces. We build relationships with contractors, businesses, and
-            homeowners who demand consistency.
-          </p>
-          <div class="mt-8 grid gap-4 sm:grid-cols-2">
-            <ValueProp icon="detail" title="Attention to Detail" text="Every corner, every surface, every edge. We clean like it's our own space." />
-            <ValueProp icon="clock" title="On-Time, Every Time" text="Contractor-friendly scheduling. We show up when we say we will." />
-            <ValueProp icon="shield" title="Insured & Professional" text="Fully licensed and insured, with a background-checked team." />
-            <ValueProp icon="bolt" title="Fast Response Times" text="Quotes within hours, not days. We move at your pace." />
-          </div>
+  <!-- Why Choose Us -->
+  <section id="why-us" class="bg-stone py-24 md:py-32 lg:py-40" aria-label="Why choose Luxury Duo">
+    <div class="container-lux grid items-center gap-16 lg:grid-cols-12 lg:gap-16">
+      <figure class="frame mx-auto w-full max-w-[520px] lg:col-span-5 lg:mx-0 lg:mt-3" data-reveal>
+        <Picture
+          src={whyUs}
+          alt="Two-person Luxury Duo Cleaning crew wiping down a table in Orlando FL"
+          formats={[...PICTURE_FORMATS]}
+          fallbackFormat="jpg"
+          widths={widthSet(whyUs, [400])}
+          sizes="(min-width: 1320px) 460px, (min-width: 1024px) 36vw, (min-width: 568px) 520px, calc(100vw - 48px)"
+          loading="lazy"
+          decoding="async"
+          class="block h-auto w-full"
+          pictureAttributes={{ class: 'contents' }}
+        />
+      </figure>
+
+      <div class="lg:col-span-7 lg:pl-8">
+        <SectionHeader
+          align="left"
+          number="02"
+          eyebrow="Why Luxury Duo"
+          title="Why Choose Luxury Duo"
+          lead="We don't just clean spaces. We build relationships with contractors, businesses, and homeowners who demand consistency."
+        />
+        <div class="mt-16 grid gap-x-12 gap-y-12 sm:grid-cols-2" data-reveal>
+          <ValueProp number="I" title="Attention to Detail" text="Every corner, every surface, every edge. We clean like it's our own space." />
+          <ValueProp number="II" title="On-Time, Every Time" text="Contractor-friendly scheduling. We show up when we say we will." />
+          <ValueProp number="III" title="Insured & Professional" text="Fully licensed and insured, with a background-checked team." />
+          <ValueProp number="IV" title="Fast Response Times" text="Quotes within hours, not days. We move at your pace." />
         </div>
       </div>
     </div>
   </section>
 
   <!-- Testimonials -->
-  <section id="testimonials" class="bg-bg" aria-labelledby="testimonials-title">
-    <div class="mx-auto max-w-7xl px-4 py-20 sm:px-6 sm:py-24 lg:px-8" data-reveal>
-      <div class="mx-auto max-w-2xl text-center">
-        <span class="text-xs font-bold uppercase tracking-[0.2em] text-accent">Testimonials</span>
-        <h2 id="testimonials-title" class="mt-2 text-3xl font-bold tracking-tight text-ink sm:text-5xl">
-          What Our Clients Say
-        </h2>
-        <p class="mt-4 text-lg text-muted">
-          Trusted by contractors, property managers, and homeowners across Orlando.
-        </p>
-      </div>
-      <div class="mt-12">
+  <section id="testimonials" class="bg-ivory py-24 md:py-32 lg:py-40" aria-label="Testimonials">
+    <div class="container-lux">
+      <SectionHeader
+        number="03"
+        eyebrow="Testimonials"
+        title="What Our Clients Say"
+        lead="Trusted by contractors, property managers, and homeowners across Orlando."
+      />
+      <div class="mt-16 md:mt-20" data-reveal>
         <TestimonialsCarousel />
       </div>
     </div>
   </section>
 
   <!-- Service Area -->
-  <section id="service-area" class="bg-bg-alt" aria-labelledby="service-area-title">
-    <div class="mx-auto max-w-7xl px-4 py-20 sm:px-6 sm:py-24 lg:px-8" data-reveal>
-      <div class="grid items-center gap-10 lg:grid-cols-2 lg:gap-16">
-        <div>
-          <span class="text-xs font-bold uppercase tracking-[0.2em] text-ink">Service Area</span>
-          <h2 id="service-area-title" class="mt-2 text-3xl font-bold tracking-tight text-ink sm:text-5xl">
-            Proudly Serving Central Florida
-          </h2>
-          <p class="mt-4 max-w-xl text-lg leading-relaxed text-ink">
-            Based in Orlando and on the road across the surrounding cities every day.
-          </p>
-          <ul class="mt-8 flex flex-wrap gap-2" aria-label="Cities we serve">
-            {cities.map((city) => (
-              <li class="rounded-full border border-line bg-bg px-4 py-2 text-sm font-semibold text-ink">
-                {city}
-              </li>
-            ))}
-          </ul>
-          <p class="mt-6 max-w-xl leading-relaxed text-ink">
-            Don't see your neighborhood?
-            <a href={link('/contact/')} class="font-bold underline underline-offset-4 hover:no-underline">Contact us</a>
-            — if you're in Central Florida, we'll do our best to fit you in.
-          </p>
-        </div>
+  <section id="service-area" class="bg-stone py-24 md:py-32 lg:py-40" aria-label="Service area">
+    <div class="container-lux grid items-start gap-16 lg:grid-cols-12 lg:gap-16">
+      <div class="lg:col-span-6">
+        <SectionHeader
+          align="left"
+          number="04"
+          eyebrow="Service Area"
+          title="Proudly Serving Central Florida"
+          lead="Based in Orlando and on the road across the surrounding cities every day."
+        />
+        <ul class="mt-12 grid grid-cols-2 gap-x-8 border-t border-line sm:gap-x-12" aria-label="Cities we serve" data-reveal>
+          {cities.map((city) => (
+            <li class="border-b border-line py-3.5 font-serif text-[1.25rem] leading-snug text-ink">{city}</li>
+          ))}
+        </ul>
+        <p class="mt-10 max-w-md text-muted" data-reveal>
+          Don't see your neighborhood?
+          <a href={link('/contact/')} class="text-ink underline decoration-champagne decoration-1 underline-offset-[6px] transition-colors duration-[600ms] hover:decoration-ink">Contact us</a>
+          — if you're in Central Florida, we'll do our best to fit you in.
+        </p>
+      </div>
+      <div class="lg:col-span-6 lg:pt-2" data-reveal>
         <MapPlaceholder title="Service Area Map" text="Google Maps — Orlando, FL service area" />
       </div>
     </div>

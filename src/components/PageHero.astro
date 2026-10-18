@@ -1,17 +1,80 @@
 ---
+import { Picture } from 'astro:assets';
+import { resolveImage, cropSet, PICTURE_FORMATS } from '../lib/images.ts';
+
+/**
+ * PageHero — ivory interior-page opener.
+ * - Text only: champagne rule, eyebrow, .t-h1 across 8/12 columns, lead, then a
+ *   container-width hairline that closes the hero.
+ * - With `imageSrc` (assets path, e.g. 'images/services/x.jpg'): 7/5 split with a
+ *   4/5 portrait in a champagne .frame.
+ * Top padding is modest on purpose: the sticky header already occupies flow space.
+ */
 interface Props {
   eyebrow: string;
   title: string;
   lead?: string;
+  imageSrc?: string;
+  imageAlt?: string;
 }
 
-const { eyebrow, title, lead } = Astro.props;
+const { eyebrow, title, lead, imageSrc, imageAlt = '' } = Astro.props;
+const base = import.meta.env.BASE_URL;
+const meta = imageSrc ? resolveImage(imageSrc) : undefined;
+const crop = meta ? cropSet(meta, 4 / 5, [480, 640, 800, 960]) : undefined;
+const fallbackSrc = imageSrc && !meta ? (/^(https?:)?\//.test(imageSrc) ? imageSrc : `${base}${imageSrc}`) : undefined;
+const hasImage = Boolean(imageSrc);
 ---
 
-<section class="bg-primary bg-gradient-to-br from-primary via-primary to-primary-light">
-  <div class="mx-auto max-w-7xl px-4 pt-12 pb-12 sm:pt-16 sm:px-6 lg:px-8" data-reveal>
-    <span class="text-xs font-bold uppercase tracking-[0.15em] text-silver">{eyebrow}</span>
-    <h1 class="mt-3 max-w-3xl text-4xl font-bold tracking-tight text-white sm:text-5xl">{title}</h1>
-    {lead && <p class="mt-4 max-w-2xl text-lg text-white/80">{lead}</p>}
-  </div>
+<section class="bg-ivory">
+  {hasImage ? (
+    <div class="container-lux pt-16 pb-24 md:pt-20 md:pb-32">
+      <div class="grid items-center gap-14 lg:grid-cols-12 lg:gap-16">
+        <div class="lg:col-span-7" data-reveal>
+          <span class="rule-champagne mb-8" aria-hidden="true"></span>
+          <p class="t-eyebrow">{eyebrow}</p>
+          <h1 class="t-h1 mt-6 text-ink">{title}</h1>
+          {lead && <p class="t-lead mt-8 max-w-xl">{lead}</p>}
+        </div>
+        <div class="lg:col-span-5" data-reveal>
+          <div class="frame mx-auto w-full max-w-md lg:max-w-none">
+            <div class="overflow-hidden" style="aspect-ratio: 4/5">
+              {meta && crop ? (
+                <Picture
+                  src={meta}
+                  alt={imageAlt}
+                  formats={[...PICTURE_FORMATS]}
+                  fallbackFormat="jpg"
+                  width={crop.width}
+                  height={crop.height}
+                  widths={crop.widths}
+                  sizes="(min-width: 1320px) 470px, (min-width: 1024px) 36vw, (min-width: 768px) 448px, calc(100vw - 48px)"
+                  fit="cover"
+                  loading="eager"
+                  fetchpriority="high"
+                  decoding="async"
+                  class="h-full w-full object-cover"
+                  pictureAttributes={{ class: 'contents' }}
+                />
+              ) : (
+                <img src={fallbackSrc} alt={imageAlt} loading="eager" fetchpriority="high" decoding="async" class="h-full w-full object-cover" />
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  ) : (
+    <div class="container-lux pt-16 md:pt-24">
+      <div class="lg:grid lg:grid-cols-12" data-reveal>
+        <div class="lg:col-span-8">
+          <span class="rule-champagne mb-8" aria-hidden="true"></span>
+          <p class="t-eyebrow">{eyebrow}</p>
+          <h1 class="t-h1 mt-6 text-ink">{title}</h1>
+          {lead && <p class="t-lead mt-8 max-w-2xl">{lead}</p>}
+        </div>
+      </div>
+      <hr class="hairline mt-16 md:mt-24" />
+    </div>
+  )}
 </section>

@@ -2,74 +2,54 @@
 import { TESTIMONIALS } from '../lib/testimonials.ts';
 import TestimonialCard from './TestimonialCard.astro';
 
-const PER_GROUP = 3;
-const groups: (typeof TESTIMONIALS)[] = [];
-for (let i = 0; i < TESTIMONIALS.length; i += PER_GROUP) {
-  groups.push(TESTIMONIALS.slice(i, i + PER_GROUP));
-}
+// One quote at a time, crossfading in place.
 const total = TESTIMONIALS.length;
-const rangeLabel = (gi: number) => {
-  const start = gi * PER_GROUP + 1;
-  const end = Math.min(start + PER_GROUP - 1, total);
-  return `${start}–${end}`;
-};
+const pad = (n: number) => String(n).padStart(2, '0');
 
 const arrowBtn =
-  'flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-line bg-white text-primary shadow-sm transition hover:bg-silver-light focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent';
+  'inline-flex h-11 w-11 shrink-0 items-center justify-center border border-field text-ink transition-colors duration-[600ms] hover:border-ink hover:bg-ink hover:text-ivory';
 ---
 
 <div
   data-carousel="testimonials"
+  class="mx-auto max-w-3xl"
   role="region"
   aria-roledescription="carousel"
   aria-label="Client reviews"
 >
-  <div class="min-w-0">
-    {groups.map((group, gi) => (
+  <div class="grid">
+    {TESTIMONIALS.map((t, gi) => (
       <div
         data-group={String(gi)}
-        data-range={rangeLabel(gi)}
         role="group"
         aria-roledescription="slide"
-        aria-label={`Reviews ${rangeLabel(gi)} of ${total}`}
-        hidden={gi !== 0}
-        class="grid gap-6 md:grid-cols-3"
+        aria-label={`Review ${gi + 1} of ${total}`}
+        class:list={['t-slide [grid-area:1/1]', gi === 0 ? 'is-active' : '']}
+        inert={gi !== 0 ? true : undefined}
+        aria-hidden={gi !== 0 ? 'true' : undefined}
       >
-        {group.map((t) => (
-          <TestimonialCard quote={t.quote} name={t.name} role={t.role} initials={t.initials} />
-        ))}
+        <TestimonialCard quote={t.quote} name={t.name} role={t.role} initials={t.initials} />
       </div>
     ))}
   </div>
 
-  {groups.length > 1 && (
-    <div class="mt-8 flex items-center justify-center gap-4">
-      <button type="button" data-prev aria-label="Previous reviews" class={arrowBtn}>
-        <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <polyline points="15 18 9 12 15 6" />
+  {total > 1 && (
+    <div class="mt-14 flex items-center justify-center gap-8">
+      <button type="button" data-prev aria-label="Previous review" class={arrowBtn}>
+        <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M14.5 6.5L9 12l5.5 5.5" />
         </svg>
       </button>
 
-      <div class="flex items-center gap-1">
-        {groups.map((_, gi) => (
-          <button
-            type="button"
-            data-dot={String(gi)}
-            aria-label={`Show reviews ${rangeLabel(gi)}`}
-            aria-current={gi === 0 ? 'true' : undefined}
-            class="group flex h-8 w-8 items-center justify-center rounded-full focus-visible:outline-2 focus-visible:outline-accent"
-          >
-            <span
-              data-dot-mark
-              class={`block h-3 rounded-full transition-all ${gi === 0 ? 'w-6 bg-primary' : 'w-3 bg-primary/30 group-hover:bg-primary/60'}`}
-            />
-          </button>
-        ))}
-      </div>
+      <p class="t-eyebrow min-w-[5.5rem] text-center tabular-nums text-ink" aria-hidden="true">
+        <span data-counter>{pad(1)}</span>
+        <span class="mx-2 text-field">/</span>
+        <span>{pad(total)}</span>
+      </p>
 
-      <button type="button" data-next aria-label="Next reviews" class={arrowBtn}>
-        <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <polyline points="9 18 15 12 9 6" />
+      <button type="button" data-next aria-label="Next review" class={arrowBtn}>
+        <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M9.5 6.5L15 12l-5.5 5.5" />
         </svg>
       </button>
     </div>
@@ -85,41 +65,30 @@ const arrowBtn =
     cleanups = [];
 
     document.querySelectorAll<HTMLElement>('[data-carousel="testimonials"]').forEach((root) => {
-      const groups = Array.from(root.querySelectorAll<HTMLElement>('[data-group]'));
-      const dots = Array.from(root.querySelectorAll<HTMLButtonElement>('[data-dot]'));
+      const slides = Array.from(root.querySelectorAll<HTMLElement>('[data-group]'));
       const prev = root.querySelector<HTMLButtonElement>('[data-prev]');
       const next = root.querySelector<HTMLButtonElement>('[data-next]');
+      const counter = root.querySelector<HTMLElement>('[data-counter]');
       const status = root.querySelector<HTMLElement>('[data-status]');
-      const total = groups.length;
+      const total = slides.length;
       if (total < 2) return;
       let index = 0;
 
       const show = (i: number, announce = true) => {
         index = ((i % total) + total) % total;
-        groups.forEach((g, gi) => (g.hidden = gi !== index));
-        dots.forEach((d, di) => {
-          const active = di === index;
-          if (active) d.setAttribute('aria-current', 'true');
-          else d.removeAttribute('aria-current');
-          const mark = d.querySelector('[data-dot-mark]');
-          mark?.classList.toggle('w-6', active);
-          mark?.classList.toggle('bg-primary', active);
-          mark?.classList.toggle('w-3', !active);
-          mark?.classList.toggle('bg-primary/30', !active);
-          mark?.classList.toggle('group-hover:bg-primary/60', !active);
+        slides.forEach((s, si) => {
+          const active = si === index;
+          s.classList.toggle('is-active', active);
+          s.inert = !active;
+          if (active) s.removeAttribute('aria-hidden');
+          else s.setAttribute('aria-hidden', 'true');
         });
-        if (status && announce) {
-          status.textContent = `Showing reviews ${groups[index].dataset.range} of ${root.querySelectorAll('figure').length}`;
-        }
+        if (counter) counter.textContent = String(index + 1).padStart(2, '0');
+        if (status && announce) status.textContent = `Showing review ${index + 1} of ${total}`;
       };
 
       const onPrev = () => show(index - 1);
       const onNext = () => show(index + 1);
-      const dotHandlers = dots.map((d, di) => {
-        const h = () => show(di);
-        d.addEventListener('click', h);
-        return h;
-      });
       const onKey = (e: KeyboardEvent) => {
         if (e.key === 'ArrowLeft') onPrev();
         else if (e.key === 'ArrowRight') onNext();
@@ -134,7 +103,6 @@ const arrowBtn =
         prev?.removeEventListener('click', onPrev);
         next?.removeEventListener('click', onNext);
         root.removeEventListener('keydown', onKey);
-        dots.forEach((d, di) => d.removeEventListener('click', dotHandlers[di]));
       });
     });
   }
@@ -145,3 +113,27 @@ const arrowBtn =
     cleanups = [];
   });
 </script>
+
+<style>
+  /* All slides share one grid cell (height = tallest quote) and crossfade. */
+  .t-slide {
+    opacity: 0;
+    visibility: hidden;
+    transition:
+      opacity var(--dur-slow) var(--ease-lux),
+      visibility 0s linear var(--dur-slow);
+  }
+  .t-slide.is-active {
+    opacity: 1;
+    visibility: visible;
+    transition:
+      opacity var(--dur-slow) var(--ease-lux) 200ms,
+      visibility 0s linear 0s;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .t-slide,
+    .t-slide.is-active {
+      transition: none;
+    }
+  }
+</style>

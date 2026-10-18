@@ -8,22 +8,28 @@ const { value, label } = Astro.props;
 ---
 
 <!-- Container-sized value: stays on one line ("Same-day" never breaks at the
-     hyphen) and shrinks to fit narrow columns, capped at 3rem. -->
-<div class="@container text-center" data-reveal>
-  <div class="whitespace-nowrap text-[min(3rem,22cqi)] font-bold leading-tight tracking-tight text-primary" data-stat={value}>{value}</div>
-  <div class="mt-2 text-sm font-semibold uppercase tracking-wider text-muted">{label}</div>
+     hyphen) and shrinks to fit narrow columns, capped at 3.5rem. Parents draw
+     the hairlines between stats. -->
+<div class="@container" data-reveal>
+  <div
+    class="whitespace-nowrap font-serif text-[min(3.5rem,22cqi)] font-light leading-none tracking-[-0.01em] text-ink"
+    data-stat={value}
+  >
+    {value}
+  </div>
+  <div class="t-eyebrow mt-5">{label}</div>
 </div>
 
 <script>
   function initStats() {
-    document.querySelectorAll('[data-stat]:not([data-done])').forEach((el) => {
+    document.querySelectorAll<HTMLElement>('[data-stat]:not([data-done])').forEach((el) => {
       const m = /^(\d+)(.*)$/.exec(el.dataset.stat || '');
       if (!m) return;
       el.dataset.done = 'true';
       const target = Number(m[1]);
       const suffix = m[2];
       if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-      const dur = 1300;
+      const dur = 1600;
       let started = false;
       const io = new IntersectionObserver(
         (entries) => {
@@ -32,7 +38,7 @@ const { value, label } = Astro.props;
               started = true;
               io.disconnect();
               const t0 = performance.now();
-              const tick = (t) => {
+              const tick = (t: number) => {
                 const p = Math.min(1, (t - t0) / dur);
                 const eased = 1 - Math.pow(1 - p, 3);
                 el.textContent = Math.round(target * eased) + suffix;

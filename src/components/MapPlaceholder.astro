@@ -7,15 +7,21 @@ interface Props {
 const { title = 'Service Area Map', text = 'Google Maps — Orlando, FL service area' } = Astro.props;
 ---
 
-<div class="overflow-hidden rounded-2xl border border-line bg-white shadow-sm">
+<div class="overflow-hidden border border-line bg-paper">
   <iframe
     title={title}
     src="https://maps.google.com/maps?q=Orlando,%20FL&t=&z=11&ie=UTF8&iwloc=&output=embed"
-    class="aspect-[4/3] w-full"
-    style="border: 0;"
+    class="map-frame block aspect-[4/3] w-full"
     loading="lazy"
     allowfullscreen
     referrerpolicy="no-referrer-when-downgrade"
   ></iframe>
   <p class="sr-only">{text}</p>
 </div>
+
+<style>
+  .map-frame {
+    border: 0;
+    filter: grayscale(1) sepia(0.15);
+  }
+</style>

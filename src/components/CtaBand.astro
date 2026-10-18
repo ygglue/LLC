@@ -1,6 +1,11 @@
 ---
 import Button from './Button.astro';
 
+/**
+ * CtaBand — closing call to action.
+ * tone="dark" (default): ink band, champagne + ivory-outline buttons.
+ * tone="stone": stone band, ink + ink-outline buttons.
+ */
 interface Props {
   title: string;
   lead?: string;
@@ -8,18 +13,30 @@ interface Props {
   primaryLabel?: string;
   secondaryHref: string;
   secondaryLabel: string;
+  tone?: 'dark' | 'stone';
 }
 
-const { title, lead, primaryHref, primaryLabel = 'Get a Free Quote', secondaryHref, secondaryLabel } = Astro.props;
+const {
+  title,
+  lead,
+  primaryHref,
+  primaryLabel = 'Get a Free Quote',
+  secondaryHref,
+  secondaryLabel,
+  tone = 'dark',
+} = Astro.props;
+const dark = tone === 'dark';
 ---
 
-<section class="bg-footer" data-dark>
-  <div class="mx-auto max-w-4xl px-4 py-16 text-center sm:px-6" data-reveal>
-    <h2 class="text-4xl font-bold tracking-tight text-white sm:text-5xl">{title}</h2>
-    {lead && <p class="mx-auto mt-4 max-w-2xl text-lg text-silver-light">{lead}</p>}
-    <div class="mt-8 flex flex-wrap items-center justify-center gap-4">
-      <Button href={primaryHref} variant="light">{primaryLabel}</Button>
-      <Button href={secondaryHref} variant="outline-light">{secondaryLabel}</Button>
+<section class={dark ? 'bg-ink' : 'bg-stone'} data-dark={dark ? '' : undefined}>
+  <div class="container-lux py-24 text-center md:py-32 lg:py-40" data-reveal>
+    <span class="rule-champagne mx-auto mb-8" aria-hidden="true"></span>
+    <p class:list={['t-eyebrow', !dark && 'text-gold-deep']}>Begin</p>
+    <h2 class:list={['t-h1 mx-auto mt-6 max-w-4xl', dark ? 'text-on-dark' : 'text-ink']}>{title}</h2>
+    {lead && <p class:list={['t-lead mx-auto mt-8 max-w-2xl', !dark && 'text-muted']}>{lead}</p>}
+    <div class="mt-12 flex flex-col items-stretch justify-center gap-4 sm:flex-row sm:items-center">
+      <Button href={primaryHref} variant={dark ? 'light' : 'primary'}>{primaryLabel}</Button>
+      <Button href={secondaryHref} variant={dark ? 'outline-light' : 'outline'}>{secondaryLabel}</Button>
     </div>
   </div>
 </section>
