@@ -1,11 +1,11 @@
 ---
 import { ClientRouter } from 'astro:transitions';
-// Self-hosted Baloo 2 (replaces render-blocking Google Fonts).
-// 500 is kept because body copy (weight 400) has always resolved to it.
-import '@fontsource/baloo-2/500.css';
-import '@fontsource/baloo-2/600.css';
-import '@fontsource/baloo-2/700.css';
-import '@fontsource/baloo-2/800.css';
+// Self-hosted fonts: Cormorant Garamond (display serif) + Inter (variable sans).
+import '@fontsource/cormorant-garamond/300.css';
+import '@fontsource/cormorant-garamond/400.css';
+import '@fontsource/cormorant-garamond/500.css';
+import '@fontsource/cormorant-garamond/400-italic.css';
+import '@fontsource-variable/inter';
 import 'lenis/dist/lenis.css';
 import { SITE_NAME } from '../lib/site';
 
@@ -29,7 +29,7 @@ const canonicalUrl = canonical ?? new URL(Astro.url.pathname, Astro.site ?? 'htt
     <title>{title}</title>
     <meta name="description" content={description} />
     {noindex ? <meta name="robots" content="noindex" /> : <link rel="canonical" href={canonicalUrl} />}
-    <meta name="theme-color" content="#f7f2e7" />
+    <meta name="theme-color" content="#F7F3EC" />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:type" content="website" />
@@ -40,27 +40,26 @@ const canonicalUrl = canonical ?? new URL(Astro.url.pathname, Astro.site ?? 'htt
     <slot name="head" />
     <ClientRouter />
     <style>
+      /* Page transition: a quiet 0.5s cross-fade only (no movement). */
       ::view-transition-old(root),
       ::view-transition-new(root) {
-        animation-duration: 0.45s;
-        animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+        animation-duration: 0.5s;
+        animation-timing-function: cubic-bezier(0.22, 0.61, 0.36, 1);
       }
       ::view-transition-old(root) {
-        animation-name: page-out;
+        animation-name: page-fade-out;
       }
       ::view-transition-new(root) {
-        animation-name: page-in;
+        animation-name: page-fade-in;
       }
-      @keyframes page-out {
+      @keyframes page-fade-out {
         to {
           opacity: 0;
-          transform: translateY(-14px);
         }
       }
-      @keyframes page-in {
+      @keyframes page-fade-in {
         from {
           opacity: 0;
-          transform: translateY(14px);
         }
       }
       @media (prefers-reduced-motion: reduce) {
@@ -94,7 +93,7 @@ const canonicalUrl = canonical ?? new URL(Astro.url.pathname, Astro.site ?? 'htt
               if (e.isIntersecting) {
                 const el = e.target;
                 const delay = el.getAttribute('data-reveal-delay');
-                if (delay) el.style.transitionDelay = `${Number(delay) * 80}ms`;
+                if (delay) el.style.transitionDelay = `${Number(delay) * 120}ms`;
                 el.classList.add('is-visible');
                 io.unobserve(el);
               }

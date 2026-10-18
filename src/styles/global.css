@@ -1,93 +1,486 @@
 @import "tailwindcss";
 
-@theme {
-  /* Beige + charcoal — no brown, no blue */
-  --color-primary: #33383f;
-  --color-primary-light: #4c545e;
-  --color-accent: #33383f;
-  --color-accent-hover: #23272c;
-  --color-silver: #cfc3ab;
-  --color-silver-light: #f0e9d8;
-  --color-bg: #f7f2e7;
-  --color-bg-alt: #d4bba9;
-  --color-ink: #26292e;
-  /* muted: 4.68:1 on tan bg-alt/hero #d4bba9, 7.67:1 on cream bg, 8.56:1 on white */
-  --color-muted: #4f4c45;
-  --color-line: #ddd0b8; /* decorative dividers/card edges only */
-  /* form field borders: 3.59:1 on white, 3.22:1 on cream (WCAG 1.4.11) */
-  --color-field: #8f8677;
-  --color-footer: #23272c;
-  --color-star: #d9a441;
-  --color-hero: #d4bba9;
+/* ==========================================================================
+   Luxury Duo Cleaning — "Ivory & Champagne" design tokens
+   Contrast (WCAG): ink 15.5:1 on ivory · muted 6.44 · gold 5.18 · gold-deep 6.48
+   · error 6.92 · field border 3.51. Champagne FAILS as text on light (2.42) —
+   use it for rules/frames/icons on light, text only on ink (6.40).
+   ========================================================================== */
+@theme static {
+  /* Core palette */
+  --color-ivory: #f7f3ec; /* page background */
+  --color-stone: #ede6da; /* alternate section */
+  --color-paper: #fcfaf6; /* cards / forms */
+  --color-ink: #1e1b18; /* text; dark surfaces (footer, menu, CTA) */
+  --color-ink-soft: #3a342d; /* ink button hover */
+  --color-muted: #5e574e; /* body copy */
+  --color-champagne: #b89a63; /* rules, frames, icons — text ONLY on dark */
+  --color-gold: #80612c; /* gold text on light */
+  --color-gold-deep: #6e5326; /* gold text on stone / hover */
+  --color-line: #dcd2c1; /* decorative hairlines */
+  --color-field: #8a8070; /* form/control borders (3:1) */
+  --color-on-dark: #f7f3ec;
+  --color-on-dark-muted: #ada597;
+  --color-error: #9a2b23;
 
-  --font-sans: "Baloo 2", "Nunito", system-ui, sans-serif;
+  /* Legacy aliases — keep until Phase 3 cleanup */
+  --color-primary: #1e1b18; /* → ink */
+  --color-primary-light: #3a342d; /* → ink-soft */
+  --color-accent: #1e1b18; /* → ink */
+  --color-accent-hover: #3a342d; /* → ink-soft */
+  --color-footer: #1e1b18; /* → ink */
+  --color-bg: #f7f3ec; /* → ivory */
+  --color-hero: #f7f3ec; /* → ivory */
+  --color-bg-alt: #ede6da; /* → stone */
+  --color-silver-light: #ede6da; /* → stone */
+  --color-silver: #b89a63; /* → champagne */
+  --color-star: #b89a63; /* → champagne */
 
-  --radius-card: 12px;
-  --nav-height: 72px;
+  /* Type */
+  --font-serif: "Cormorant Garamond", Georgia, serif;
+  --font-sans: "Inter Variable", system-ui, sans-serif;
+
+  /* Shape & depth */
+  --radius-card: 2px;
+  --shadow-soft: 0 20px 40px -24px rgb(30 27 24 / 0.18);
+
+  /* Motion */
+  --ease-lux: cubic-bezier(0.22, 0.61, 0.36, 1);
 }
 
-/* Base */
-/* No native smooth scrolling: Lenis smooths wheel + same-page anchors, and the
-   page-transition router must jump to the top instantly. */
-body {
-  font-family: var(--font-sans);
-  color: var(--color-ink);
-  background: var(--color-bg);
-  -webkit-font-smoothing: antialiased;
-  overflow-x: clip;
+:root {
+  --nav-height: 88px;
+  --dur-fast: 300ms;
+  --dur-base: 600ms;
+  --dur-slow: 1000ms;
 }
 
-/* DRAFT placeholder treatment — remove post-signoff */
-.draft-slot {
-  position: relative;
-  border: 2px dashed var(--color-accent);
-  border-radius: var(--radius-card);
-  overflow: hidden;
-}
-.draft-pill {
-  display: inline-flex;
-  align-items: center;
-  font-size: 0.68rem;
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  background: var(--color-accent);
-  color: #fff;
-  border-radius: 999px;
-  padding: 0.2rem 0.6rem;
+/* ==========================================================================
+   Base
+   No native smooth scrolling: Lenis smooths wheel + same-page anchors, and the
+   page-transition router must jump to the top instantly.
+   ========================================================================== */
+@layer base {
+  body {
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    line-height: 1.75;
+    color: var(--color-ink);
+    background: var(--color-ivory);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: clip;
+  }
+
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-serif);
+    font-weight: 400;
+  }
 }
 
-/* Scroll reveal */
+/* ==========================================================================
+   Type utilities
+   Never use Cormorant 300 below 1.5rem.
+   ========================================================================== */
+@layer components {
+  .t-display {
+    font-family: var(--font-serif);
+    font-weight: 300;
+    font-size: clamp(3rem, 7vw, 6.5rem);
+    line-height: 1;
+    letter-spacing: -0.01em;
+  }
+  .t-h1 {
+    font-family: var(--font-serif);
+    font-weight: 300;
+    font-size: clamp(2.5rem, 5vw, 4.5rem);
+    line-height: 1.05;
+  }
+  .t-h2 {
+    font-family: var(--font-serif);
+    font-weight: 400;
+    font-size: clamp(2rem, 3.6vw, 3.25rem);
+    line-height: 1.1;
+  }
+  .t-h3 {
+    font-family: var(--font-serif);
+    font-weight: 400;
+    font-size: 1.75rem;
+    line-height: 1.2;
+  }
+  .t-h4 {
+    font-family: var(--font-sans);
+    font-weight: 500;
+    font-size: 1rem;
+    line-height: 1.4;
+    letter-spacing: 0.02em;
+  }
+  .t-eyebrow {
+    font-family: var(--font-sans);
+    font-weight: 500;
+    font-size: 0.75rem;
+    line-height: 1.4;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: var(--color-gold);
+  }
+  [data-dark] .t-eyebrow {
+    color: var(--color-champagne);
+  }
+  .t-lead {
+    font-family: var(--font-sans);
+    font-size: 1.125rem;
+    line-height: 1.7;
+    color: var(--color-muted);
+  }
+  @media (min-width: 768px) {
+    .t-lead {
+      font-size: 1.25rem;
+    }
+  }
+  [data-dark] .t-lead {
+    color: var(--color-on-dark-muted);
+  }
+  .t-body {
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    line-height: 1.75;
+  }
+  .t-small {
+    font-size: 0.8125rem;
+    line-height: 1.6;
+  }
+  .t-italic {
+    font-family: var(--font-serif);
+    font-style: italic;
+  }
+
+  /* ========================================================================
+     Layout
+     ======================================================================== */
+  .container-lux {
+    width: 100%;
+    max-width: 1320px;
+    margin-inline: auto;
+    padding-inline: 1.5rem;
+  }
+  @media (min-width: 768px) {
+    .container-lux {
+      padding-inline: 2.5rem;
+    }
+  }
+  @media (min-width: 1024px) {
+    .container-lux {
+      padding-inline: 4rem;
+    }
+  }
+
+  /* Hairlines & frames */
+  .hairline {
+    border: 0;
+    border-top: 1px solid var(--color-line);
+  }
+  [data-dark] .hairline {
+    border-top-color: rgb(247 243 236 / 0.16);
+  }
+  .rule-champagne {
+    display: block;
+    width: 48px;
+    height: 1px;
+    background: var(--color-champagne);
+  }
+  .frame {
+    position: relative;
+    display: block;
+  }
+  .frame::after {
+    content: "";
+    position: absolute;
+    inset: 12px;
+    border: 1px solid var(--color-champagne);
+    pointer-events: none;
+  }
+  @media (min-width: 768px) {
+    .frame::after {
+      inset: -12px;
+    }
+  }
+
+  /* ========================================================================
+     Buttons & links
+     ======================================================================== */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    min-height: 52px;
+    padding-inline: 2rem;
+    font-family: var(--font-sans);
+    font-weight: 500;
+    font-size: 0.75rem;
+    line-height: 1.2;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    text-align: center;
+    text-decoration: none;
+    border: 1px solid transparent;
+    border-radius: 0;
+    cursor: pointer;
+    transition:
+      background-color var(--dur-base) var(--ease-lux),
+      color var(--dur-base) var(--ease-lux),
+      border-color var(--dur-base) var(--ease-lux);
+  }
+  .btn-primary {
+    background: var(--color-ink);
+    border-color: var(--color-ink);
+    color: var(--color-ivory);
+  }
+  .btn-primary:hover {
+    background: var(--color-ink-soft);
+    border-color: var(--color-ink-soft);
+  }
+  .btn-outline {
+    background: transparent;
+    border-color: var(--color-ink);
+    color: var(--color-ink);
+  }
+  .btn-outline:hover {
+    background: var(--color-ink);
+    color: var(--color-ivory);
+  }
+  .btn-on-dark {
+    background: var(--color-champagne);
+    border-color: var(--color-champagne);
+    color: var(--color-ink);
+  }
+  .btn-on-dark:hover {
+    background: var(--color-ivory);
+    border-color: var(--color-ivory);
+  }
+  .btn-outline-on-dark {
+    background: transparent;
+    border-color: var(--color-ivory);
+    color: var(--color-ivory);
+  }
+  .btn-outline-on-dark:hover {
+    background: var(--color-ivory);
+    color: var(--color-ink);
+  }
+
+  .link-lux,
+  .link-lux-ink {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding-block: 0.25rem;
+    font-family: var(--font-sans);
+    font-weight: 500;
+    font-size: 0.75rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: var(--color-gold);
+    transition: color var(--dur-base) var(--ease-lux);
+  }
+  .link-lux-ink {
+    color: var(--color-ink);
+  }
+  .link-lux:hover {
+    color: var(--color-gold-deep);
+  }
+  .link-lux::after,
+  .link-lux-ink::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 1px;
+    background: currentColor;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform var(--dur-base) var(--ease-lux);
+  }
+  .link-lux:hover::after,
+  .link-lux:focus-visible::after,
+  .link-lux-ink:hover::after,
+  .link-lux-ink:focus-visible::after {
+    transform: scaleX(1);
+  }
+
+  /* ========================================================================
+     Forms
+     ======================================================================== */
+  .field-label {
+    display: block;
+    font-family: var(--font-sans);
+    font-weight: 500;
+    font-size: 0.75rem;
+    line-height: 1.4;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: var(--color-ink);
+  }
+  .field {
+    display: block;
+    width: 100%;
+    min-height: 52px;
+    padding: 0.75rem 0;
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    line-height: 1.5;
+    color: var(--color-ink);
+    background: transparent;
+    border: 0;
+    border-bottom: 1px solid var(--color-field);
+    border-radius: 0;
+    appearance: none;
+    transition:
+      border-color var(--dur-fast) var(--ease-lux),
+      box-shadow var(--dur-fast) var(--ease-lux);
+  }
+  .field::placeholder {
+    color: var(--color-muted);
+    opacity: 1;
+  }
+  .field:focus,
+  .field:focus-visible {
+    outline: none;
+    border-bottom-color: var(--color-ink);
+    box-shadow: 0 1px 0 var(--color-ink);
+  }
+  select.field,
+  textarea.field {
+    padding-inline: 1rem;
+    border: 1px solid var(--color-field);
+    border-radius: 2px;
+  }
+  select.field {
+    padding-right: 2.75rem;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8' fill='none'%3E%3Cpath d='M1 1.5l5 5 5-5' stroke='%231E1B18' stroke-width='1.2'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+  }
+  textarea.field {
+    min-height: 9rem;
+    resize: vertical;
+  }
+  select.field:focus,
+  select.field:focus-visible,
+  textarea.field:focus,
+  textarea.field:focus-visible {
+    border-color: var(--color-ink);
+    box-shadow: 0 0 0 1px var(--color-ink);
+  }
+  .field[aria-invalid="true"] {
+    border-color: var(--color-error);
+  }
+  .field[aria-invalid="true"]:focus,
+  .field[aria-invalid="true"]:focus-visible {
+    box-shadow: 0 1px 0 var(--color-error);
+  }
+  select.field[aria-invalid="true"]:focus,
+  textarea.field[aria-invalid="true"]:focus {
+    box-shadow: 0 0 0 1px var(--color-error);
+  }
+  .field-error {
+    font-family: var(--font-sans);
+    font-size: 0.8125rem;
+    line-height: 1.6;
+    color: var(--color-error);
+  }
+
+  /* DRAFT placeholder treatment (hairline) — remove post-signoff */
+  .draft-slot {
+    position: relative;
+    border: 1px dashed var(--color-field);
+    border-radius: var(--radius-card);
+    overflow: hidden;
+  }
+  .draft-pill {
+    display: inline-flex;
+    align-items: center;
+    font-family: var(--font-sans);
+    font-size: 0.625rem;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    background: var(--color-paper);
+    color: var(--color-ink);
+    border: 1px solid var(--color-line);
+    border-radius: 0;
+    padding: 0.2rem 0.6rem;
+  }
+}
+
+/* ==========================================================================
+   Scroll reveal — slow fades. Left/right/scale variants share the default.
+   ========================================================================== */
 [data-reveal] {
   opacity: 0;
-  transform: translateY(18px);
+  transform: translateY(12px);
   transition:
-    opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1),
-    transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    opacity var(--dur-slow) var(--ease-lux),
+    transform var(--dur-slow) var(--ease-lux);
 }
-[data-reveal="left"] { transform: translateX(-18px); }
-[data-reveal="right"] { transform: translateX(18px); }
-[data-reveal="scale"] { transform: scale(0.97); }
 [data-reveal].is-visible {
   opacity: 1;
   transform: none;
 }
-@media (prefers-reduced-motion: reduce) {
-  html { scroll-behavior: auto; }
-  [data-reveal] { opacity: 1; transform: none; transition: none; }
-  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+
+/* Image hover: slow, subtle zoom. Apply .img-zoom to the <img> (or wrapper). */
+.img-zoom {
+  transition: transform 1200ms var(--ease-lux);
+}
+.group:hover .img-zoom,
+.img-zoom:hover {
+  transform: scale(1.03);
 }
 
-/* Focus visibility — two-tone ring.
-   Light surfaces: charcoal outline (10.6:1 on cream, 6.5:1 on tan) with a white
-   halo filling the offset gap. Dark surfaces (footer, menu overlay, CtaBand,
-   page hero, photo cards): cream outline (13.5:1 on #23272c) with a dark halo. */
+/* ==========================================================================
+   Focus visibility
+   Light surfaces: ink outline (15.5:1 on ivory). Dark surfaces ([data-dark],
+   legacy bg-footer/bg-primary): champagne outline (6.40:1 on ink).
+   ========================================================================== */
 :focus-visible {
-  outline: 3px solid var(--color-accent);
-  outline-offset: 2px;
-  box-shadow: 0 0 0 2px #fff;
+  outline: 2px solid var(--color-ink);
+  outline-offset: 3px;
 }
-:where(.bg-footer, .bg-primary, [data-dark]) :focus-visible {
-  outline-color: var(--color-bg);
-  box-shadow: 0 0 0 2px var(--color-footer);
+:where(.bg-footer, .bg-primary, .bg-ink, [data-dark]) :focus-visible {
+  outline-color: var(--color-champagne);
+}
+
+/* ==========================================================================
+   Reduced motion
+   ========================================================================== */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  [data-reveal] {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+  .img-zoom,
+  .group:hover .img-zoom,
+  .img-zoom:hover {
+    transform: none;
+  }
+  /* Static underline so the affordance never depends on animation */
+  .link-lux::after,
+  .link-lux-ink::after {
+    transform: scaleX(1);
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
 }

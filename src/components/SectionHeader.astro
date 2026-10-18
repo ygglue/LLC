@@ -4,16 +4,23 @@ interface Props {
   lead?: string;
   align?: 'center' | 'left';
   eyebrow?: string;
+  /** Optional section numeral, e.g. "01" — rendered serif italic gold. */
+  number?: string;
 }
 
-const { title, lead, align = 'center', eyebrow } = Astro.props;
-const alignCls = align === 'center' ? 'text-center mx-auto items-center' : 'text-left items-start';
+const { title, lead, align = 'center', eyebrow, number } = Astro.props;
+const isLeft = align === 'left';
+const alignCls = isLeft ? 'text-left items-start' : 'text-center mx-auto items-center';
 ---
 
-<div class:list={['flex max-w-2xl flex-col gap-3', alignCls]} data-reveal>
-  {eyebrow && (
-    <span class="text-xs font-bold uppercase tracking-[0.15em] text-accent">{eyebrow}</span>
+<div class:list={['flex max-w-3xl flex-col', alignCls]} data-reveal>
+  {isLeft && <span class="rule-champagne mb-6" aria-hidden="true"></span>}
+  {(number || eyebrow) && (
+    <p class="mb-5 flex items-baseline gap-4">
+      {number && <span class="t-italic text-xl leading-none text-gold">{number}</span>}
+      {eyebrow && <span class="t-eyebrow">{eyebrow}</span>}
+    </p>
   )}
-  <h2 class="text-3xl font-bold tracking-tight text-ink sm:text-4xl">{title}</h2>
-  {lead && <p class="text-lg text-muted">{lead}</p>}
+  <h2 class="t-h2 text-ink">{title}</h2>
+  {lead && <p class:list={['t-lead mt-6 max-w-xl', !isLeft && 'mx-auto']}>{lead}</p>}
 </div>

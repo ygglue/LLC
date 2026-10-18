@@ -1,10 +1,32 @@
 ---
 import { link, SITE_NAME } from '../lib/site';
+
+interface Props {
+  /** ink on light surfaces (default), ivory on dark surfaces. */
+  tone?: 'ink' | 'ivory';
+  /** @deprecated kept for compatibility; 'light' maps to tone="ivory". */
+  variant?: 'dark' | 'light' | string;
+  /** @deprecated the DRAFT pill has been removed; accepted and ignored. */
+  showDraft?: boolean;
+  class?: string;
+}
+
+const { tone, variant, class: extra = '' } = Astro.props;
+const resolvedTone = tone ?? (variant === 'light' ? 'ivory' : 'ink');
+const isIvory = resolvedTone === 'ivory';
 ---
 
-<a href={link('/')} aria-label={`${SITE_NAME} — Home`}>
-  <span class="flex flex-col leading-none">
-    <span class="text-base font-bold tracking-tight text-ink">Luxury Duo Cleaning</span>
-    <span class="draft-pill mt-1 self-start" style="font-size: 0.55rem;">DRAFT LOGO</span>
+<a href={link('/')} aria-label={`${SITE_NAME} — Home`} class:list={['inline-block no-underline', extra]}>
+  <span class="flex flex-col items-start leading-none">
+    <span
+      class:list={['font-serif text-[1.25rem] font-medium', isIvory ? 'text-on-dark' : 'text-ink']}
+      style="font-variant-caps: all-small-caps; letter-spacing: 0.18em;"
+    >Luxury Duo</span>
+    <span
+      class:list={[
+        'mt-1.5 font-sans text-[0.625rem] font-medium uppercase tracking-[0.24em]',
+        isIvory ? 'text-champagne' : 'text-gold',
+      ]}
+    >Cleaning · Orlando</span>
   </span>
 </a>
