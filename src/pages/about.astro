@@ -12,7 +12,11 @@ import { link, PHONE_HREF } from '../lib/site';
 
 import { Picture } from 'astro:assets';
 import whyUs from '../assets/images/why-us.jpg';
-import { widthSet, PICTURE_FORMATS } from '../lib/images';
+import missionImg from '../assets/images/services/airbnb.jpg';
+import { widthSet, cropSet, PICTURE_FORMATS } from '../lib/images';
+
+// Portrait crop for the Mission column.
+const missionCrop = cropSet(missionImg, 4 / 5, [400, 640, 900]);
 
 ---
 
@@ -36,6 +40,23 @@ import { widthSet, PICTURE_FORMATS } from '../lib/images';
       <div class="grid gap-12 lg:grid-cols-12 lg:gap-16">
         <div class="lg:col-span-5">
           <SectionHeader align="left" number="01" eyebrow="Purpose" title="Our Mission" />
+          <figure class="frame mt-12 w-full max-w-[440px] md:mt-16" data-reveal>
+            <Picture
+              src={missionImg}
+              alt="Folded towels and guest amenities on light-wood shelves against a blush wall"
+              formats={[...PICTURE_FORMATS]}
+              fallbackFormat="jpg"
+              width={missionCrop.width}
+              height={missionCrop.height}
+              widths={missionCrop.widths}
+              fit="cover"
+              sizes="(min-width: 1024px) 440px, (min-width: 488px) 440px, calc(100vw - 48px)"
+              loading="lazy"
+              decoding="async"
+              class="block h-auto w-full"
+              pictureAttributes={{ class: 'contents' }}
+            />
+          </figure>
         </div>
         <div class="lg:col-span-6 lg:col-start-7 lg:pt-[4.25rem]" data-reveal>
           <p class="font-serif text-[1.625rem] font-normal leading-[1.4] text-ink md:text-[2rem]">
